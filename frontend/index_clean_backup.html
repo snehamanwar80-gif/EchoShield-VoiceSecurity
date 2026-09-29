@@ -1,0 +1,2637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EchoShield Security</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    background:#06101d;
+    color:#eef6ff;
+    min-height:100vh;
+}
+
+/* =========================
+   APP LAYOUT
+========================= */
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    width:245px;
+    height:100vh;
+    position:fixed;
+    left:0;
+    top:0;
+    background:#091522;
+    border-right:1px solid #1b3148;
+    padding:22px 14px;
+    display:flex;
+    flex-direction:column;
+    z-index:100;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:8px 12px 28px;
+}
+
+.logo-icon{
+    width:38px;
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#122b44;
+    border-radius:11px;
+    font-size:22px;
+}
+
+.logo-text{
+    font-size:21px;
+    font-weight:800;
+}
+
+.logo-text span{
+    color:#39dfa4;
+}
+
+.menu-title{
+    font-size:10px;
+    color:#637a91;
+    font-weight:700;
+    letter-spacing:1.3px;
+    margin:22px 12px 8px;
+}
+
+.nav-btn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 13px;
+    margin:3px 0;
+    border:0;
+    border-radius:10px;
+    background:transparent;
+    color:#9db0c3;
+    font-size:14px;
+    text-align:left;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.nav-btn:hover{
+    background:#102337;
+    color:white;
+}
+
+.nav-btn.active{
+    background:#163653;
+    color:white;
+    box-shadow:inset 3px 0 #39dfa4;
+}
+
+.nav-icon{
+    width:22px;
+    text-align:center;
+    font-size:17px;
+}
+
+.sidebar-bottom{
+    margin-top:auto;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+    margin-left:245px;
+    width:calc(100% - 245px);
+    min-height:100vh;
+}
+
+/* =========================
+   TOPBAR
+========================= */
+
+.topbar{
+    height:72px;
+    border-bottom:1px solid #172a40;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+    background:#071321;
+}
+
+.page-title{
+    font-size:18px;
+    font-weight:700;
+}
+
+.top-actions{
+    display:flex;
+    gap:10px;
+}
+
+.icon-btn{
+    width:38px;
+    height:38px;
+    border:1px solid #20374d;
+    border-radius:10px;
+    background:#0b1a2a;
+    color:#dce9f6;
+    cursor:pointer;
+    font-size:17px;
+}
+
+.icon-btn:hover{
+    background:#142b40;
+}
+
+/* =========================
+   PAGE
+========================= */
+
+.page{
+    display:none;
+    padding:30px;
+    max-width:1250px;
+}
+
+.page.active{
+    display:block;
+}
+
+.page-heading{
+    margin-bottom:25px;
+}
+
+.page-heading h1{
+    font-size:30px;
+    margin-bottom:7px;
+}
+
+.page-heading p{
+    color:#8fa5bb;
+    font-size:14px;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card{
+    background:#0b1b2c;
+    border:1px solid #1d3852;
+    border-radius:17px;
+    padding:22px;
+}
+
+.card-title{
+    font-size:17px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.card-subtitle{
+    color:#849bb1;
+    font-size:13px;
+}
+
+/* =========================
+   HOME
+========================= */
+
+.protection{
+    min-height:245px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:30px;
+    background:linear-gradient(135deg,#0d263b,#0a1a2b);
+    border:1px solid #23516a;
+    border-radius:20px;
+    position:relative;
+    overflow:hidden;
+}
+
+.protection::after{
+    content:"";
+    width:280px;
+    height:280px;
+    position:absolute;
+    right:-100px;
+    top:-100px;
+    border-radius:50%;
+    border:1px solid #204863;
+}
+
+.protection-content{
+    position:relative;
+    z-index:2;
+}
+
+.status-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:7px 11px;
+    border-radius:30px;
+    background:#103528;
+    color:#58e6b0;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:15px;
+}
+
+.status-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#39dfa4;
+}
+
+.protection h1{
+    font-size:32px;
+    margin-bottom:9px;
+}
+
+.protection p{
+    color:#9eb3c7;
+    max-width:560px;
+    line-height:1.6;
+}
+
+.primary-btn{
+    margin-top:20px;
+    border:0;
+    border-radius:10px;
+    background:#39dfa4;
+    color:#04131d;
+    padding:12px 19px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.primary-btn:hover{
+    filter:brightness(1.08);
+}
+
+.security-shield{
+    position:relative;
+    z-index:2;
+    width:130px;
+    height:130px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#102a40;
+    border:1px solid #2d5973;
+    font-size:65px;
+}
+
+/* =========================
+   QUICK ACTIONS
+========================= */
+
+.section{
+    margin-top:25px;
+}
+
+.section-title{
+    font-size:18px;
+    margin-bottom:14px;
+}
+
+.quick-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.quick-card{
+    padding:20px;
+    background:#0b1b2c;
+    border:1px solid #1d3852;
+    border-radius:15px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.quick-card:hover{
+    transform:translateY(-2px);
+    border-color:#2b5872;
+}
+
+.quick-icon{
+    font-size:28px;
+    margin-bottom:13px;
+}
+
+.quick-card h3{
+    font-size:15px;
+    margin-bottom:6px;
+}
+
+.quick-card p{
+    font-size:12px;
+    color:#8198ad;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.stat{
+    padding:20px;
+    background:#0b1b2c;
+    border:1px solid #1d3852;
+    border-radius:15px;
+}
+
+.stat-label{
+    color:#849bb1;
+    font-size:12px;
+}
+
+.stat-value{
+    font-size:27px;
+    font-weight:800;
+    margin-top:8px;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.input{
+    width:100%;
+    padding:13px;
+    border-radius:9px;
+    border:1px solid #29455d;
+    background:#071522;
+    color:white;
+    outline:none;
+    margin:10px 0;
+}
+
+.input:focus{
+    border-color:#39dfa4;
+}
+
+.file-box{
+    border:1px dashed #31516b;
+    border-radius:14px;
+    padding:30px;
+    text-align:center;
+    margin:18px 0;
+}
+
+.file-box input{
+    margin-top:15px;
+}
+
+/* =========================
+   ANALYSIS RESULT
+========================= */
+
+.result{
+    margin-top:20px;
+    display:none;
+}
+
+.result-main{
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+
+.risk-circle{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:#102337;
+    border:5px solid #39dfa4;
+}
+
+.risk-circle strong{
+    font-size:25px;
+}
+
+.risk-circle span{
+    font-size:10px;
+    color:#91a7ba;
+}
+
+.result-info h2{
+    margin-bottom:8px;
+}
+
+.result-info p{
+    color:#91a7ba;
+    font-size:13px;
+    margin:4px 0;
+}
+
+.alert{
+    margin-top:18px;
+    padding:14px;
+    border-radius:10px;
+    background:#14283a;
+    color:#b8cada;
+    font-size:13px;
+}
+
+/* =========================
+   INCIDENT TABLE
+========================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+
+th,td{
+    padding:14px 12px;
+    text-align:left;
+    border-bottom:1px solid #1b3147;
+    font-size:13px;
+}
+
+th{
+    color:#7890a7;
+    font-size:11px;
+    text-transform:uppercase;
+}
+
+.badge{
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:700;
+}
+
+.badge.low{
+    background:#123328;
+    color:#58e6b0;
+}
+
+.badge.medium{
+    background:#383016;
+    color:#f1cf67;
+}
+
+.badge.high{
+    background:#401c25;
+    color:#ff7789;
+}
+
+/* =========================
+   ASSISTANT
+========================= */
+
+.assistant-box{
+    max-width:800px;
+}
+
+.chat-answer{
+    margin-top:18px;
+    padding:18px;
+    border-radius:12px;
+    background:#102438;
+    color:#b9cad9;
+    line-height:1.6;
+    display:none;
+}
+
+.suggestions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:15px;
+}
+
+.suggestion{
+    border:1px solid #29455d;
+    background:#091827;
+    color:#9db0c3;
+    border-radius:20px;
+    padding:8px 11px;
+    font-size:11px;
+    cursor:pointer;
+}
+
+/* =========================
+   CALL
+========================= */
+
+.call-status{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:18px 0;
+    padding:13px;
+    background:#091827;
+    border-radius:10px;
+    color:#9db0c3;
+}
+
+.call-dot{
+    width:9px;
+    height:9px;
+    background:#39dfa4;
+    border-radius:50%;
+}
+
+.call-security{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin-top:20px;
+}
+
+.security-item{
+    background:#091827;
+    padding:15px;
+    border-radius:10px;
+    color:#9bb0c2;
+    font-size:12px;
+}
+
+.security-item strong{
+    display:block;
+    color:#eef6ff;
+    margin-top:5px;
+}
+
+/* =========================
+   SETTINGS
+========================= */
+
+.setting{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:17px 0;
+    border-bottom:1px solid #1b3147;
+}
+
+.setting:last-child{
+    border-bottom:0;
+}
+
+.setting-title{
+    font-size:14px;
+}
+
+.setting-desc{
+    font-size:11px;
+    color:#71889e;
+    margin-top:4px;
+}
+
+.toggle{
+    width:43px;
+    height:23px;
+    background:#1e3449;
+    border-radius:20px;
+    position:relative;
+}
+
+.toggle::after{
+    content:"";
+    position:absolute;
+    width:17px;
+    height:17px;
+    border-radius:50%;
+    background:#7890a4;
+    top:3px;
+    left:3px;
+}
+
+.toggle.on{
+    background:#18543f;
+}
+
+.toggle.on::after{
+    left:23px;
+    background:#39dfa4;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
+    .sidebar{
+        width:70px;
+        padding:15px 8px;
+    }
+
+    .logo-text,
+    .menu-title,
+    .nav-btn span:not(.nav-icon){
+        display:none;
+    }
+
+    .logo{
+        justify-content:center;
+        padding-bottom:20px;
+    }
+
+    .nav-btn{
+        justify-content:center;
+        padding:13px 5px;
+    }
+
+    .main{
+        margin-left:70px;
+        width:calc(100% - 70px);
+    }
+
+    .quick-grid,
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .protection{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:25px;
+    }
+
+    .security-shield{
+        display:none;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .page{
+        padding:18px;
+    }
+
+    .topbar{
+        padding:0 18px;
+    }
+
+    .page-heading h1{
+        font-size:25px;
+    }
+
+    .call-security{
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+
+/* ================= SECURITY RESULT ACTIONS ================= */
+.security-action{margin-top:20px;padding:18px;border-radius:14px;border:1px solid #29455d;background:#081827}
+.security-action-title{font-size:11px;color:#7890a7;font-weight:800;letter-spacing:1px;margin-bottom:8px}
+.security-action-value{font-size:20px;font-weight:900}
+.security-recommendation{margin-top:10px;color:#b8cada;font-size:13px;line-height:1.55}
+.result.safe .risk-circle{border-color:#39dfa4}
+.result.safe .security-action{border-color:#24664f;background:#0b241c}
+.result.safe .security-action-value{color:#58e6b0}
+.result.warning .risk-circle{border-color:#f1cf67}
+.result.warning .security-action{border-color:#66551e;background:#28230f}
+.result.warning .security-action-value{color:#f1cf67}
+.result.danger .risk-circle{border-color:#ff6078}
+.result.danger .security-action{border-color:#743040;background:#2a1118}
+.result.danger .security-action-value{color:#ff7789}
+.notification-wrap{position:relative}
+.notification-badge{position:absolute;right:-3px;top:-4px;min-width:17px;height:17px;padding:0 4px;border-radius:10px;background:#ff536d;color:white;font-size:9px;font-weight:900;display:none;align-items:center;justify-content:center;border:2px solid #071321}
+.notification-panel{display:none;position:absolute;right:0;top:48px;width:360px;max-height:430px;overflow:auto;background:#0b1b2c;border:1px solid #29455d;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.45);z-index:300;padding:12px}
+.notification-panel.show{display:block}
+.notification-head{display:flex;justify-content:space-between;align-items:center;padding:8px 8px 12px;border-bottom:1px solid #1b3147;margin-bottom:8px}
+.notification-head strong{font-size:14px}
+.notification-clear{background:none;border:0;color:#6f8ba3;font-size:11px;cursor:pointer}
+.notification-item{padding:12px;border-radius:10px;background:#091827;margin-bottom:8px;border-left:3px solid #39dfa4}
+.notification-item.medium{border-left-color:#f1cf67}
+.notification-item.high{border-left-color:#ff6078}
+.notification-item-title{font-weight:800;font-size:13px}
+.notification-item-message{color:#91a7ba;font-size:11px;line-height:1.45;margin-top:4px}
+.notification-item-time{color:#637a91;font-size:10px;margin-top:7px}
+.notification-empty{color:#7890a7;text-align:center;padding:25px 10px;font-size:12px}
+@media(max-width:600px){.notification-panel{position:fixed;right:12px;top:68px;width:min(360px,calc(100vw - 24px))}}
+
+
+
+.report-chart{margin-top:20px;padding:18px;border:1px solid #1d3852;border-radius:14px;background:#091827}
+.report-chart-title{font-size:12px;color:#7890a7;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;font-weight:800}
+.report-chart-row{display:grid;grid-template-columns:80px 1fr 55px;align-items:center;gap:10px;margin:14px 0;font-size:12px}
+.report-track{height:18px;background:#13283b;border-radius:9px;overflow:hidden}
+.report-fill{height:100%;width:0;border-radius:9px;transition:width .6s ease}
+.report-fill.high{background:#ff6078}.report-fill.medium{background:#f1cf67}.report-fill.low{background:#39dfa4}
+.report-chart-empty{color:#71889e;font-size:12px;padding:10px 0}
+.assistant-faq{margin-top:18px;padding-top:15px;border-top:1px solid #1b3147}
+.assistant-faq-title{font-size:11px;color:#7890a7;font-weight:800;letter-spacing:1px;margin-bottom:10px}
+.font-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.font-controls select{margin:0!important}
+body.light-mode .report-chart,body.light-mode .report-track{background:#f7f9fc;border-color:#dbe3ec}
+
+:root{--echo-font-size:16px;}
+body{font-size:var(--echo-font-size);}
+body.light-mode{background:#f4f7fb;color:#172033;}
+body.light-mode .sidebar,body.light-mode .topbar,body.light-mode .card{background:#ffffff;color:#172033;}
+body.light-mode .page-heading p,body.light-mode .card-subtitle,body.light-mode .setting-desc{color:#667085;}
+
+.echo-profile-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px}.echo-profile-head h3{margin:0 0 4px}.echo-profile-head p{margin:0}.echo-profile-x{width:30px;height:30px;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:rgba(255,255,255,.05);color:inherit;font-size:20px;line-height:1;cursor:pointer}.echo-profile-x:hover{background:rgba(255,255,255,.1)}
+.report-total-line{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin:10px 0 14px;border:1px solid rgba(255,255,255,.09);border-radius:10px;background:rgba(255,255,255,.03)}.report-total-line span{font-size:12px;color:#91a4b7}.report-total-line strong{font-size:18px}.report-chart-row{grid-template-columns:58px minmax(100px,1fr) 42px 46px!important}.report-chart-row em{font-size:11px;color:#91a4b7;font-style:normal;text-align:right}.report-chart-enhanced .report-track{height:12px}.report-chart-enhanced .report-fill{height:100%;transition:width .35s ease}
+body.light-mode .echo-profile-x{border-color:#d8e0e8;background:#f3f6f8}.report-chart-enhanced{width:100%;box-sizing:border-box}.report-chart-enhanced .report-chart-row{display:grid;align-items:center;gap:10px;margin:14px 0}.report-chart-enhanced .report-track{min-width:0;overflow:hidden}.report-chart-enhanced .report-fill{min-width:2px;border-radius:999px}.report-chart-empty{padding:14px 0;text-align:center;color:#91a4b7;font-size:12px}
+</style>
+<style id="echoshield-multilingual-style">
+.echo-language-badge{display:inline-flex!important;align-items:center;gap:6px;margin-left:10px;padding:5px 9px;border:1px solid rgba(255,255,255,.12);border-radius:999px;font-size:12px;color:#9fb1c4;background:rgba(255,255,255,.04);cursor:pointer;font:inherit} .echo-language-badge:hover{border-color:rgba(120,180,255,.45);background:rgba(255,255,255,.08)} .echo-language-menu{position:fixed;z-index:99999;right:24px;top:72px;width:250px;padding:14px;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:#111a24;box-shadow:0 18px 50px rgba(0,0,0,.35)} .echo-language-menu h4{margin:0 0 10px;font-size:14px}.echo-language-menu select{width:100%;padding:10px;border-radius:9px}.echo-language-menu small{display:block;margin-top:8px;color:#8fa5bb} body.light-mode .echo-language-menu{background:#fff;color:#17212b;border-color:#d8e0e8;box-shadow:0 18px 50px rgba(0,0,0,.15)}
+.assistant-speak-btn{border:0;background:transparent;cursor:pointer;font-size:16px;margin-left:8px;opacity:.85}
+.assistant-speak-btn:hover{opacity:1;transform:scale(1.05)}
+#speechStatus{transition:opacity .2s}
+@media(max-width:700px){.echo-language-badge{display:none}.assistant-input-row{flex-direction:column;align-items:stretch!important}.assistant-input-row button{width:100%}}
+
+</style>
+<style id="echoshield-profile-style">
+.echo-profile-menu{position:fixed;z-index:100000;right:24px;top:72px;width:330px;max-width:calc(100vw - 30px);padding:18px;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:#111a24;color:#eef5fb;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.echo-profile-menu h3{margin:0 0 6px;font-size:18px}.echo-profile-menu p{margin:0 0 14px;font-size:12px;color:#91a4b7}.echo-profile-tabs{display:flex;gap:7px;margin-bottom:14px}.echo-profile-tab{flex:1;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:inherit;border-radius:9px;padding:9px;cursor:pointer}.echo-profile-tab.active{background:#2d6cdf;border-color:#2d6cdf}.echo-profile-field{margin-bottom:10px}.echo-profile-field label{display:block;font-size:12px;margin-bottom:5px;color:#aebdca}.echo-profile-field input{width:100%;box-sizing:border-box;padding:10px;border-radius:9px;border:1px solid #34485b;background:#0c141d;color:#fff;outline:none}.echo-profile-field input:focus{border-color:#5b9cff}.echo-profile-action{width:100%;border:0;border-radius:9px;padding:10px;cursor:pointer;font-weight:700;background:#2d6cdf;color:#fff}.echo-profile-secondary{width:100%;border:1px solid rgba(255,255,255,.15);border-radius:9px;padding:9px;cursor:pointer;background:transparent;color:inherit;margin-top:8px}.echo-profile-msg{font-size:12px;margin:9px 0 0;min-height:16px}.echo-profile-user{padding:12px;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.04);margin-bottom:12px}.echo-profile-user strong{display:block;font-size:15px}.echo-profile-user span{display:block;font-size:12px;color:#94a8bb;margin-top:3px}.echo-profile-language{width:100%;padding:9px;border-radius:9px;margin-top:10px}.echo-profile-menu{max-height:calc(100vh - 95px);overflow:auto}.echo-profile-menu input::placeholder{color:#7890a6}.echo-profile-tabs button{font-size:13px}.echo-profile-action,.echo-profile-secondary,.echo-profile-tab{font-family:inherit}.echo-profile-danger{background:#a83232!important}.echo-profile-danger:hover{background:#c13d3d!important}body.light-mode .echo-profile-menu{background:#fff;color:#17212b;border-color:#d8e0e8;box-shadow:0 20px 60px rgba(0,0,0,.18)}body.light-mode .echo-profile-field input{background:#fff;color:#17212b;border-color:#ccd6e0}.echo-language-badge{cursor:pointer!important}@media(max-width:700px){.echo-language-badge{display:inline-flex!important}.echo-profile-menu{right:12px;top:64px}}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">🛡️</div>
+
+        <div class="logo-text">
+            Echo<span>Shield</span>
+        </div>
+
+    </div>
+
+    <button class="nav-btn active" onclick="showPage('home',this)">
+        <span class="nav-icon">🏠</span>
+        <span>Home</span>
+    </button>
+
+    <button class="nav-btn" onclick="showPage('live',this)">
+        <span class="nav-icon">🎙️</span>
+        <span>Live Voice</span>
+    </button>
+
+    <button class="nav-btn" onclick="showPage('calls',this)">
+        <span class="nav-icon">📞</span>
+        <span>Secure Calls</span>
+    </button>
+
+    <button class="nav-btn" onclick="showPage('scanner',this)">
+        <span class="nav-icon">📁</span>
+        <span>Voice Scanner</span>
+    </button>
+
+    <div class="menu-title">SECURITY</div>
+
+    <button class="nav-btn" onclick="showPage('fraud',this)">
+        <span class="nav-icon">🛡️</span>
+        <span>Fraud Intelligence</span>
+    </button>
+
+    <button class="nav-btn" onclick="showPage('assistant',this)">
+        <span class="nav-icon">🤖</span>
+        <span>Security Assistant</span>
+    </button>
+
+    <button class="nav-btn" onclick="showPage('reports',this)">
+        <span class="nav-icon">📊</span>
+        <span>Security Reports</span>
+    </button>
+
+    <div class="sidebar-bottom">
+
+        <div class="menu-title">SYSTEM</div>
+
+        <button class="nav-btn" onclick="showPage('settings',this)">
+            <span class="nav-icon">⚙️</span>
+            <span>Settings</span>
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div class="page-title" id="topTitle">
+        Security Dashboard
+    </div>
+
+    <div class="top-actions">
+
+        <div class="notification-wrap">
+            <button class="icon-btn" onclick="showNotification()" aria-label="Notifications">🔔</button>
+            <span id="notificationBadge" class="notification-badge">0</span>
+            <div id="notificationPanel" class="notification-panel">
+                <div class="notification-head">
+                    <strong>Security Notifications</strong>
+                    <button class="notification-clear" onclick="clearNotifications()">Clear</button>
+                </div>
+                <div id="notificationList">
+                    <div class="notification-empty">No new security alerts.</div>
+                </div>
+            </div>
+        </div>
+
+        <button class="icon-btn" id="profileBtn" onclick="showProfile()" aria-label="Profile">
+            👤
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- ================= HOME ================= -->
+
+<section id="home" class="page active">
+
+    <div class="page-heading">
+
+        <h1>Protect Every Conversation</h1>
+
+        <p>
+            Detect AI-powered voice impersonation before it becomes fraud.
+        </p>
+
+    </div>
+
+
+    <div class="protection">
+
+        <div class="protection-content">
+
+            <div class="status-pill">
+                <span class="status-dot"></span>
+                PROTECTION READY
+            </div>
+
+            <h1>EchoShield Protection</h1>
+
+            <p>
+                Real-time voice analysis, caller verification and
+                fraud-risk intelligence in one security layer.
+            </p>
+
+            <button class="primary-btn"
+                onclick="startRealTimeProtection()">
+                🎙️ Start Live Protection
+            </button>
+
+        </div>
+
+        <div class="security-shield">
+            🛡️
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">
+            Quick Actions
+        </div>
+
+        <div class="quick-grid">
+
+            <div class="quick-card"
+                onclick="showPage('live')">
+
+                <div class="quick-icon">🎙️</div>
+
+                <h3>Live Voice</h3>
+
+                <p>
+                    Monitor microphone audio in real time.
+                </p>
+
+            </div>
+
+
+            <div class="quick-card"
+                onclick="showPage('calls')">
+
+                <div class="quick-icon">📞</div>
+
+                <h3>Secure Call</h3>
+
+                <p>
+                    Start a protected WebRTC call.
+                </p>
+
+            </div>
+
+
+            <div class="quick-card"
+                onclick="showPage('scanner')">
+
+                <div class="quick-icon">📁</div>
+
+                <h3>Voice Scanner</h3>
+
+                <p>
+                    Upload and analyze a voice recording.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">
+            Security Overview
+        </div>
+
+        <div class="stats">
+
+            <div class="stat">
+                <div class="stat-label">Protection Status</div>
+                <div class="stat-value">🟢 Ready</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">AI Monitoring</div>
+                <div class="stat-value">Active</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">Risk Engine</div>
+                <div class="stat-value">Online</div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= LIVE VOICE ================= -->
+
+<section id="live" class="page">
+
+    <div class="page-heading">
+
+        <h1>🎙️ Live Voice Protection</h1>
+
+        <p>
+            Record at least 4.04 seconds, then run the real pretrained AASIST anti-spoofing analysis.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            Real-Time Voice Monitoring
+        </div>
+
+        <div class="card-subtitle">
+            Speak naturally and stop the recording when you are finished.
+        </div>
+
+        <button class="primary-btn" id="rec">
+            🎙️ Start Recording
+        </button>
+
+        <button class="primary-btn" id="analyzeLiveBtn" style="display:none;margin-top:12px;">
+            🧠 Analyze Voice
+        </button>
+
+        <p id="liveStatus"
+           style="margin-top:15px;color:#8fa5bb;font-size:13px;">
+            Microphone ready
+        </p>
+
+    </div>
+
+
+    <div id="liveResult" class="result card">
+
+        <div class="card-title">
+            Voice Security Result
+        </div>
+
+        <div class="result-main">
+
+            <div class="risk-circle" id="liveCircle">
+
+                <strong id="liveScore">--</strong>
+                <span>RISK</span>
+
+            </div>
+
+            <div class="result-info">
+
+                <h2 id="liveStatusResult">
+                    Analysis complete
+                </h2>
+
+                <p id="liveSynthetic"></p>
+
+                <p id="liveHuman"></p>
+
+                <p id="liveDecision"></p>
+
+            </div>
+
+        </div>
+
+        <div class="security-action">
+            <div class="security-action-title">SECURITY ACTION</div>
+            <div id="liveAction" class="security-action-value">--</div>
+            <div id="liveRecommendation" class="security-recommendation"></div>
+        </div>
+
+        <div class="alert">
+            ⚠️ AASIST classifier signal. This percentage is a model score, not a calibrated probability.
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CALLS ================= -->
+
+<section id="calls" class="page">
+
+    <div class="page-heading">
+
+        <h1>📞 Secure WebRTC Calls</h1>
+
+        <p>
+            Controlled real-time communication with EchoShield protection.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            Start Protected Call
+        </div>
+
+        <div class="card-subtitle">
+            Enter the same room ID on both devices.
+        </div>
+
+        <input
+            id="room"
+            class="input"
+            value="echoshield-demo"
+            placeholder="Room ID"
+        >
+
+        <button class="primary-btn" onclick="call()">
+            📞 Join Secure Call
+        </button>
+
+        <div class="call-status">
+
+            <span class="call-dot"></span>
+
+            <span id="callStatus">
+                Ready to connect
+            </span>
+
+        </div>
+
+
+        <div class="call-security">
+
+            <div class="security-item">
+                Connection
+                <strong>🟢 Protected</strong>
+            </div>
+
+            <div class="security-item">
+                Audio Monitoring
+                <strong>🟢 Ready</strong>
+            </div>
+
+            <div class="security-item">
+                AI Detection
+                <strong>🟢 Enabled</strong>
+            </div>
+
+            <div class="security-item">
+                Risk Engine
+                <strong>🟢 Enabled</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= SCANNER ================= -->
+
+<section id="scanner" class="page">
+
+    <div class="page-heading">
+
+        <h1>📁 Voice Scanner</h1>
+
+        <p>
+            Upload a WAV recording (4.04+ seconds recommended) for real pretrained AASIST analysis.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            Analyze Voice Recording
+        </div>
+
+        <div class="file-box">
+
+            <div style="font-size:40px;">📁</div>
+
+            <p style="margin-top:10px;color:#91a7ba;">
+                Select a WAV audio file (recommended 4.04+ seconds)
+            </p>
+
+            <input
+                id="file"
+                type="file"
+                accept=".wav,audio/wav,audio/x-wav"
+            >
+
+        </div>
+
+        <button class="primary-btn" onclick="upload()">
+            🔍 Analyze Voice
+        </button>
+
+    </div>
+
+
+    <div id="scanResult" class="result card">
+
+        <div class="card-title">
+            🧠 Analysis Result
+        </div>
+
+        <div class="result-main">
+
+            <div class="risk-circle" id="scanCircle">
+
+                <strong id="scanScore">--</strong>
+                <span>RISK</span>
+
+            </div>
+
+            <div class="result-info">
+
+                <h2 id="scanStatus">
+                    Analysis complete
+                </h2>
+
+                <p id="scanHuman"></p>
+
+                <p id="scanSynthetic"></p>
+
+                <p id="scanDecision"></p>
+
+                <p id="scanMode"></p>
+
+            </div>
+
+        </div>
+
+        <div class="security-action">
+            <div class="security-action-title">SECURITY ACTION</div>
+            <div id="scanAction" class="security-action-value">--</div>
+            <div id="scanRecommendation" class="security-recommendation"></div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FRAUD ================= -->
+
+<section id="fraud" class="page">
+
+    <div class="page-heading">
+
+        <h1>🛡️ Fraud Intelligence</h1>
+
+        <p>
+            Review previous EchoShield security incidents.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div style="display:flex;
+                    justify-content:space-between;
+                    align-items:center;">
+
+            <div>
+
+                <div class="card-title">
+                    Security Incidents
+                </div>
+
+                <div class="card-subtitle">
+                    Historical risk events detected by the system.
+                </div>
+
+            </div>
+
+            <button class="primary-btn"
+                    onclick="incidents()">
+                ↻ Refresh
+            </button>
+
+        </div>
+
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Incident</th>
+                        <th>Risk</th>
+                        <th>Decision</th>
+                        <th>Synthetic</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="incidentTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ASSISTANT ================= -->
+
+<section id="assistant" class="page">
+
+    <div class="page-heading">
+
+        <h1>🤖 Security Assistant</h1>
+
+        <p>
+            Get security guidance from EchoShield.
+        </p>
+
+    </div>
+
+
+    <div class="card assistant-box">
+
+        <div class="card-title">
+            EchoShield Security Copilot
+        </div>
+
+        <div class="card-subtitle">
+            Ask about suspicious calls, risk levels and transaction safety.
+        </div>
+
+
+        <div class="assistant-input-row" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <input id="question" class="input" style="flex:1;min-width:220px;" value="What should I do if the call is suspicious?" placeholder="Ask a security question...">
+        <button class="primary-btn" id="speechBtn" type="button" onclick="toggleSpeechRecognition()" title="Speak">🎤</button>
+        <button class="primary-btn" id="speakLastBtn" type="button" onclick="speakLastResponse()" title="Read response aloud">🔊</button>
+        <button class="primary-btn" onclick="askAssistant()">Ask Assistant</button>
+        </div>
+        <div id="speechStatus" style="margin-top:8px;color:#8fa5bb;font-size:13px;min-height:18px;"></div>
+
+
+        <div id="answer"
+             class="chat-answer">
+        </div>
+
+
+        <div class="suggestions">
+
+            <button class="suggestion" onclick="setQuestion('Why was this voice fake?')">Why was this voice fake?</button>
+            <button class="suggestion" onclick="setQuestion('What wrong patterns did AASIST detect in this voice?')">What patterns did AASIST detect?</button>
+            <button class="suggestion" onclick="setQuestion('What should I do if a suspicious call comes?')">Suspicious call precautions</button>
+            <button class="suggestion" onclick="setQuestion('What is AASIST?')">What is AASIST?</button>
+            <button class="suggestion" onclick="setQuestion('What is Live Voice and how does it work?')">What is Live Voice?</button>
+            <button class="suggestion" onclick="setQuestion('How do I use EchoShield?')">How do I use the app?</button>
+            <button class="suggestion" onclick="setQuestion('Should I continue the transaction?')">Should I continue?</button>
+            <button class="suggestion" onclick="setQuestion('What should I do if voice cloning is detected?')">Voice cloning detected?</button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= REPORTS ================= -->
+
+<section id="reports" class="page">
+
+    <div class="page-heading">
+
+        <h1>📊 Security Reports</h1>
+
+        <p>
+            Overview of EchoShield protection activity.
+        </p>
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+            <div class="stat-label">Total Incidents</div>
+            <div class="stat-value" id="totalIncidents">
+                --
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">High Risk</div>
+            <div class="stat-value" id="highIncidents">
+                --
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">Verification</div>
+            <div class="stat-value" id="verifyIncidents">
+                --
+            </div>
+        </div>
+
+    </div>
+
+    <div class="report-grid">
+        <div class="card">
+            <div class="card-title">Risk Distribution</div>
+            <div class="card-subtitle">Live counts from saved AASIST incidents.</div>
+            <div class="report-chart report-chart-enhanced">
+                <div class="report-chart-title">Incidents by risk level</div>
+                <div class="report-total-line"><span>Total analyzed incidents</span><strong id="reportTotalGraph">0</strong></div>
+                <div class="report-chart-row"><span>HIGH</span><div class="report-track"><div id="highReportBar" class="report-fill high"></div></div><strong id="highReportValue">0</strong><em id="highReportPct">0%</em></div>
+                <div class="report-chart-row"><span>MEDIUM</span><div class="report-track"><div id="mediumReportBar" class="report-fill medium"></div></div><strong id="mediumReportValue">0</strong><em id="mediumReportPct">0%</em></div>
+                <div class="report-chart-row"><span>LOW</span><div class="report-track"><div id="lowReportBar" class="report-fill low"></div></div><strong id="lowReportValue">0</strong><em id="lowReportPct">0%</em></div>
+                <div id="reportChartEmpty" class="report-chart-empty" style="display:none">No analyzed incidents yet. Analyze a WAV voice to populate this graph.</div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- ================= SETTINGS ================= -->
+
+<section id="settings" class="page">
+    <div class="page-heading">
+        <h1>⚙️ Settings</h1>
+        <p>Configure EchoShield protection, screen and display preferences.</p>
+    </div>
+    <div class="card">
+        <div class="setting"><div><div class="setting-title">Real-Time Protection</div><div class="setting-desc">Monitor active voice sessions.</div></div><div class="toggle on" data-setting="realTimeProtection"></div></div>
+        <div class="setting"><div><div class="setting-title">Voice Monitoring</div><div class="setting-desc">Analyze voice authenticity signals.</div></div><div class="toggle on" data-setting="voiceMonitoring"></div></div>
+        <div class="setting"><div><div class="setting-title">Threat Notifications</div><div class="setting-desc">Show security warnings for risky calls.</div></div><div class="toggle on" data-setting="threatNotifications"></div></div>
+        <div class="setting"><div><div class="setting-title">Transaction Protection</div><div class="setting-desc">Require verification before sensitive actions.</div></div><div class="toggle on" data-setting="transactionProtection"></div></div>
+    </div>
+    <div class="card" style="margin-top:20px;">
+        <div class="card-title">🖥️ Screen Appearance</div>
+        <div class="setting"><div><div class="setting-title">Screen Mode</div><div class="setting-desc">Switch between Light and Dark dashboard.</div></div><div style="display:flex;gap:8px;"><button class="primary-btn" id="lightModeBtn">☀️ Light</button><button class="primary-btn" id="darkModeBtn">🌙 Dark</button></div></div>
+        <div class="setting"><div><div class="setting-title">Font Size</div><div class="setting-desc">Change dashboard text size.</div></div><select id="fontSizeSelect" class="input" style="max-width:160px;"><option value="14px">Small</option><option value="16px">Medium</option><option value="18px">Large</option><option value="20px">Extra Large</option></select></div>
+        <div class="setting"><div><div class="setting-title" data-i18n="language_support_title">🌐 Language Support</div><div class="setting-desc" data-i18n="language_support_desc">Change the app language anytime. Your selection is saved and used for text, speech recognition and voice responses.</div></div><select id="fontLanguageSelect" class="input" style="max-width:210px;" aria-label="Language Selector"><option value="en-US">English</option><option value="hi-IN">हिन्दी</option><option value="es-ES">Español</option><option value="fr-FR">Français</option><option value="zh-CN">中文</option><option value="it-IT">Italiano</option></select></div>
+    </div>
+</section>
+
+
+</main>
+
+</div>
+
+
+<script>
+
+/* =========================
+   PAGE NAVIGATION
+========================= */
+
+const titles = {
+
+    home:"Security Dashboard",
+    live:"Live Voice Protection",
+    calls:"Secure WebRTC Calls",
+    scanner:"Voice Scanner",
+    fraud:"Fraud Intelligence",
+    assistant:"Security Assistant",
+    reports:"Security Reports",
+    settings:"Settings"
+
+};
+
+
+function showPage(page,button=null){
+
+    document.querySelectorAll(".page")
+        .forEach(p => p.classList.remove("active"));
+
+    document.getElementById(page)
+        .classList.add("active");
+
+
+    document.querySelectorAll(".nav-btn")
+        .forEach(b => b.classList.remove("active"));
+
+    if(button){
+        button.classList.add("active");
+    }
+
+
+    document.getElementById("topTitle")
+        .textContent = titles[page] || "EchoShield";
+    if(typeof echoTranslateStaticText === "function") setTimeout(echoTranslateStaticText,0);
+
+    if(page === "fraud"){
+        incidents();
+    }
+
+    if(page === "reports"){
+        loadReports();
+    }
+
+}
+
+
+/* =========================
+   VOICE ANALYSIS
+========================= */
+
+async function analyze(blob,name){
+    try{
+        const form = new FormData();
+        form.append("file", blob, name);
+        const response = await fetch("/api/voice/analyze", {method:"POST", body:form, cache:"no-store"});
+        let data = {};
+        try { data = await response.json(); } catch(e) {}
+        if(!response.ok){
+            const detail = data.detail;
+            const msg = typeof detail === "string" ? detail : (detail?.message || data.message || data.error || "Voice analysis failed");
+            throw new Error(msg);
+        }
+        if(data.status === "WAITING_FOR_AUDIO"){
+            const message = data.message || "Please provide at least 4.04 seconds of audio.";
+            const live = document.getElementById("liveStatus");
+            if(live) live.textContent = message;
+            alert(message);
+            return data;
+        }
+        if(data.status !== "ANALYZED" && !data.analysis && data.synthetic_score === undefined){
+            throw new Error("AASIST returned an incomplete analysis response.");
+        }
+        showResult(data);
+        await incidents();
+        await loadReports();
+        return data;
+    }catch(error){
+        console.error("EchoShield AASIST analysis error:",error);
+        const live = document.getElementById("liveStatus");
+        if(live) live.textContent = "AASIST analysis failed: " + error.message;
+        alert("AASIST analysis failed: " + error.message);
+        throw error;
+    }
+}
+
+/* =========================
+   RESULT
+========================= */
+
+function applySecurityState(element, riskLevel){
+    element.classList.remove("safe","warning","danger");
+    if(riskLevel === "HIGH") element.classList.add("danger");
+    else if(riskLevel === "MEDIUM") element.classList.add("warning");
+    else element.classList.add("safe");
+}
+
+function showResult(data){
+    window.lastVoiceAnalysis = data;
+    const a = data.analysis || data;
+    const r = data.risk || data;
+    const human = Number(a.human_score ?? data.human_score ?? 0);
+    const synthetic = Number(a.synthetic_score ?? data.synthetic_score ?? 0);
+    const riskScore = Number(r.risk_score ?? data.risk_score ?? synthetic);
+    const level = String(r.risk_level ?? data.risk_level ?? "MEDIUM").toUpperCase();
+    const decisionRaw = String(r.decision ?? data.decision ?? "VERIFY").toUpperCase();
+    const decision = decisionRaw.includes("BLOCK") ? "BLOCK" : decisionRaw.includes("HOLD") ? "HOLD" : decisionRaw.includes("ALLOW") ? "ALLOW" : "VERIFY";
+    const recommendation = r.recommendation || data.recommendation ||
+        (decision === "BLOCK" ? "Stop the conversation and do not share sensitive information." :
+         decision === "HOLD" ? "Hold the action until the caller is verified." :
+         decision === "VERIFY" ? "Verify the caller using another trusted method before proceeding." :
+         "Voice appears genuine. Continue with normal caution.");
+
+    const label = synthetic >= 75 ? "LIKELY AI / SYNTHETIC VOICE" : synthetic >= 45 ? "REVIEW REQUIRED" : "LIKELY HUMAN / GENUINE VOICE";
+    const action = decision === "BLOCK" ? "🛑 BLOCK" : decision === "HOLD" ? "⏸️ HOLD" : decision === "VERIFY" ? "🔐 VERIFY" : "✅ ALLOW";
+
+    ["scanResult","liveResult"].forEach(id=>{
+        const el=document.getElementById(id); if(el){ el.style.display="block"; applySecurityState(el,level); }
+    });
+
+    const set=(id,value)=>{ const e=document.getElementById(id); if(e)e.textContent=value; };
+    set("scanScore", riskScore + "%");
+    set("scanStatus", label);
+    set("scanHuman", "Human / Genuine Voice: " + human + "%");
+    set("scanSynthetic", "AI / Synthetic Voice: " + synthetic + "%");
+    set("scanDecision", "Decision: " + decision);
+    set("scanMode", "Analyzed by: " + (a.analyzed_by || data.analyzed_by || "Pretrained AASIST Model"));
+    set("scanAction", action);
+    set("scanRecommendation", recommendation);
+
+    set("liveScore", riskScore + "%");
+    set("liveStatusResult", label);
+    set("liveSynthetic", "AI / Synthetic Voice: " + synthetic + "%");
+    set("liveHuman", "Human / Genuine Voice: " + human + "%");
+    set("liveDecision", "Decision: " + decision);
+    set("liveAction", action);
+    set("liveRecommendation", recommendation);
+    set("liveStatus", "Analysis completed by pretrained AASIST");
+
+    addNotification({
+        title: level === "HIGH" ? "High-risk synthetic voice detected" : level === "MEDIUM" ? "Voice verification required" : "Voice appears genuine",
+        message: "AI/Synthetic " + synthetic + "% | Human " + human + "% | " + decision,
+        severity: level
+    });
+}
+
+/* =========================
+   FILE UPLOAD
+========================= */
+
+async function upload(){
+    const file = document.getElementById("file").files[0];
+    if(!file){ alert("Please choose a WAV audio file first."); return; }
+    if(!file.name.toLowerCase().endsWith(".wav")){
+        alert("For real AASIST analysis, please upload a WAV file.");
+        return;
+    }
+    await analyze(file,file.name);
+}
+
+/* =========================
+   LIVE MICROPHONE
+========================= */
+
+let recorder = null;
+let microphoneStream = null;
+let audioContext = null;
+let audioSource = null;
+let processor = null;
+let zeroGain = null;
+let audioChunks = [];
+let recordedWavBlob = null;
+
+function mergeFloat32(chunks){
+    let length=0; chunks.forEach(c=>length+=c.length);
+    const result=new Float32Array(length); let offset=0;
+    chunks.forEach(c=>{result.set(c,offset); offset+=c.length;});
+    return result;
+}
+
+function encodeWav(samples,sampleRate){
+    const buffer=new ArrayBuffer(44 + samples.length*2);
+    const view=new DataView(buffer);
+    const writeString=(offset,str)=>{for(let i=0;i<str.length;i++)view.setUint8(offset+i,str.charCodeAt(i));};
+    writeString(0,"RIFF"); view.setUint32(4,36+samples.length*2,true); writeString(8,"WAVE");
+    writeString(12,"fmt "); view.setUint32(16,16,true); view.setUint16(20,1,true); view.setUint16(22,1,true);
+    view.setUint32(24,sampleRate,true); view.setUint32(28,sampleRate*2,true); view.setUint16(32,2,true); view.setUint16(34,16,true);
+    writeString(36,"data"); view.setUint32(40,samples.length*2,true);
+    let o=44;
+    for(let i=0;i<samples.length;i++){
+        const s=Math.max(-1,Math.min(1,samples[i]));
+        view.setInt16(o,s<0?s*0x8000:s*0x7fff,true); o+=2;
+    }
+    return new Blob([view],{type:"audio/wav"});
+}
+
+async function startLiveRecording(){
+    microphoneStream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+    audioContext=new (window.AudioContext||window.webkitAudioContext)();
+    audioSource=audioContext.createMediaStreamSource(microphoneStream);
+    processor=audioContext.createScriptProcessor(4096,1,1);
+    zeroGain=audioContext.createGain(); zeroGain.gain.value=0;
+    audioChunks=[];
+    processor.onaudioprocess=e=>audioChunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+    audioSource.connect(processor); processor.connect(zeroGain); zeroGain.connect(audioContext.destination);
+    recordedWavBlob=null;
+    document.getElementById("rec").textContent="⏹ Stop Recording";
+    document.getElementById("liveStatus").textContent="🔴 Recording... Speak naturally.";
+    document.getElementById("analyzeLiveBtn").style.display="none";
+}
+
+async function stopLiveRecording(){
+    if(processor) processor.disconnect(); if(audioSource) audioSource.disconnect(); if(zeroGain) zeroGain.disconnect();
+    if(microphoneStream) microphoneStream.getTracks().forEach(t=>t.stop());
+    const samples=mergeFloat32(audioChunks);
+    const rate=audioContext ? audioContext.sampleRate : 48000;
+    recordedWavBlob=encodeWav(samples,rate);
+    if(audioContext) await audioContext.close();
+    audioContext=null; processor=null; audioSource=null; zeroGain=null; microphoneStream=null;
+    document.getElementById("rec").textContent="🎙️ Start Recording";
+    document.getElementById("liveStatus").textContent="Recording completed. Click Analyze Voice.";
+    document.getElementById("analyzeLiveBtn").style.display="block";
+}
+
+document.getElementById("rec").addEventListener("click",async function(){
+    try{
+        if(processor){ await stopLiveRecording(); }
+        else { await startLiveRecording(); }
+    }catch(error){ console.error(error); alert("Microphone/recording error: "+error.message); }
+});
+
+document.getElementById("analyzeLiveBtn").addEventListener("click",async function(){
+    if(!recordedWavBlob){ alert("Record your voice first."); return; }
+    this.disabled=true; this.textContent="🧠 AASIST Analyzing...";
+    document.getElementById("liveStatus").textContent="Analyzing with pretrained AASIST...";
+    try{ await analyze(recordedWavBlob,"live.wav"); }
+    finally{ this.disabled=false; this.textContent="🧠 Analyze Voice"; }
+});
+
+/* =========================
+   FRAUD INTELLIGENCE
+========================= */
+
+async function incidents(){
+    const table = document.getElementById("incidentTable");
+    if(!table) return [];
+    table.innerHTML = '<tr><td colspan="4">Loading incidents...</td></tr>';
+    try{
+        const response = await fetch("/api/fraud/incidents", {cache:"no-store", headers:{"Accept":"application/json"}});
+        let payload = {};
+        try { payload = await response.json(); } catch(e) {}
+        if(!response.ok){
+            const detail = payload.detail;
+            const msg = typeof detail === "string" ? detail : (detail?.message || payload.message || payload.error || ("HTTP " + response.status));
+            throw new Error(msg);
+        }
+        const list = Array.isArray(payload) ? payload : (Array.isArray(payload.incidents) ? payload.incidents : []);
+        if(!list.length){
+            table.innerHTML = '<tr><td colspan="4">No incidents yet. Analyze a WAV voice first.</td></tr>';
+            return [];
+        }
+        table.innerHTML = list.map(i=>{
+            const level = String(i.risk_level || "LOW").toLowerCase();
+            const score = Number(i.risk_score ?? i.synthetic_score ?? 0);
+            const synthetic = Number(i.synthetic_score ?? 0);
+            return `<tr>
+                <td><strong>#${i.id ?? "-"}</strong><br><small>${i.filename || "voice.wav"}</small></td>
+                <td><span class="badge ${level}">${String(i.risk_level || "UNKNOWN")}</span><br><small>${Number.isFinite(score) ? score.toFixed(2) : "0.00"}%</small></td>
+                <td>${i.decision || "UNKNOWN"}</td>
+                <td>${Number.isFinite(synthetic) ? synthetic.toFixed(2) : "0.00"}%</td>
+            </tr>`;
+        }).join("");
+        return list;
+    }catch(error){
+        console.error("Fraud intelligence error", error);
+        table.innerHTML = `<tr><td colspan="4" style="color:#ff7789">Unable to load incidents: ${error.message}</td></tr>`;
+        return [];
+    }
+}
+
+/* =========================
+   REPORTS
+========================= */
+
+async function loadReports(){
+    try{
+        const response = await fetch("/api/reports/stats", {cache:"no-store", headers:{"Accept":"application/json"}});
+        let data = {};
+        try { data = await response.json(); } catch(e) {}
+        if(!response.ok){
+            const detail = data.detail;
+            const msg = typeof detail === "string" ? detail : (detail?.message || data.message || data.error || ("HTTP " + response.status));
+            throw new Error(msg);
+        }
+        const total = Number(data.total_incidents || 0);
+        const high = Number(data.high_risk || 0);
+        const medium = Number(data.medium_risk || 0);
+        const low = Number(data.low_risk || 0);
+        const set=(id,value)=>{const e=document.getElementById(id);if(e)e.textContent=value;};
+        set("totalIncidents",total); set("highIncidents",high); set("verifyIncidents",medium);
+        set("reportTotalGraph",total);
+        set("highReportValue",high); set("mediumReportValue",medium); set("lowReportValue",low);
+        const totalForPct=Math.max(total,1);
+        set("highReportPct",Math.round(high/totalForPct*100)+"%");
+        set("mediumReportPct",Math.round(medium/totalForPct*100)+"%");
+        set("lowReportPct",Math.round(low/totalForPct*100)+"%");
+        const max=Math.max(high,medium,low,1);
+        const hb=document.getElementById("highReportBar"); const mb=document.getElementById("mediumReportBar"); const lb=document.getElementById("lowReportBar");
+        if(hb) hb.style.width=(high/max*100)+"%";
+        if(mb) mb.style.width=(medium/max*100)+"%";
+        if(lb) lb.style.width=(low/max*100)+"%";
+        const empty=document.getElementById("reportChartEmpty");
+        if(empty) empty.style.display=total===0?"block":"none";
+        return data;
+    }catch(error){
+        console.error("Security Reports error:",error);
+        const totalEl=document.getElementById("totalIncidents"); if(totalEl) totalEl.textContent="—";
+        const empty=document.getElementById("reportChartEmpty"); if(empty){empty.style.display="block";empty.textContent="Reports unavailable: "+error.message;}
+        return null;
+    }
+}
+
+/* =========================
+   ASSISTANT
+========================= */
+
+function setQuestion(text){
+
+    document.getElementById(
+        "question"
+    ).value = text;
+
+}
+
+
+async function askAssistant(){
+    const questionElement=document.getElementById("question");
+    const answerBox=document.getElementById("answer");
+    if(!questionElement || !answerBox) return;
+    const question=questionElement.value.trim();
+    if(!question) return;
+    answerBox.style.display="block";
+    answerBox.textContent="🤖 "+(echoT ? echoT("AssistantSpeaking") : "Preparing EchoShield security guidance...");
+    try{
+        const response=await fetch("/api/assistant/ask",{
+            method:"POST",
+            headers:{"Content-Type":"application/json","Accept":"application/json"},
+            body:JSON.stringify({question,analysis:window.lastVoiceAnalysis||null,language:echoLangCode()}),
+            cache:"no-store"
+        });
+        let data={}; try{data=await response.json();}catch(e){}
+        if(!response.ok){
+            const detail=data.detail;
+            const msg=typeof detail==="string"?detail:(detail?.message||data.message||data.error||("HTTP "+response.status));
+            throw new Error(msg);
+        }
+        answerBox.textContent="🤖 "+(data.answer||"No assistant response available.");
+    }catch(error){
+        console.error("Security Assistant error:",error);
+        answerBox.textContent="🤖 "+(echoT ? echoT("AnalysisFailed") : "Assistant error")+": "+error.message;
+    }
+}
+
+
+/* =========================
+   TOP BUTTONS
+========================= */
+
+let notifications = [];
+
+function addNotification(item){
+    const n = {
+        title: item.title || "Security update",
+        message: item.message || "EchoShield security event detected.",
+        severity: String(item.severity || "LOW").toUpperCase(),
+        time: new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"})
+    };
+
+    notifications.unshift(n);
+    notifications = notifications.slice(0, 20);
+    renderNotifications();
+}
+
+function renderNotifications(){
+    const list = document.getElementById("notificationList");
+    const badge = document.getElementById("notificationBadge");
+
+    if(!notifications.length){
+        list.innerHTML = '<div class="notification-empty">No new security alerts.</div>';
+        badge.style.display = "none";
+        return;
+    }
+
+    badge.textContent = notifications.length > 9 ? "9+" : notifications.length;
+    badge.style.display = "flex";
+
+    list.innerHTML = notifications.map(n => `
+        <div class="notification-item ${n.severity.toLowerCase()}">
+            <div class="notification-item-title">${n.severity === "HIGH" ? "🛑" : n.severity === "MEDIUM" ? "⚠️" : "🟢"} ${n.title}</div>
+            <div class="notification-item-message">${n.message}</div>
+            <div class="notification-item-time">${n.time}</div>
+        </div>
+    `).join("");
+}
+
+function showNotification(){
+    const panel = document.getElementById("notificationPanel");
+    panel.classList.toggle("show");
+}
+
+function clearNotifications(){
+    notifications = [];
+    renderNotifications();
+}
+
+function closeEchoLanguageMenu(){
+    const menu=document.getElementById("echoLanguageMenu");
+    if(menu) menu.remove();
+}
+
+function openLanguageMenu(){
+    closeEchoLanguageMenu();
+    const menu=document.createElement("div");
+    menu.id="echoLanguageMenu";
+    menu.className="echo-language-menu";
+    menu.innerHTML=`
+        <h4>🌐 Language Support</h4>
+        <select id="echoQuickLanguage" aria-label="Language Selector">
+            <option value="en-US">English</option>
+            <option value="hi-IN">हिन्दी</option>
+            <option value="es-ES">Español</option>
+            <option value="fr-FR">Français</option>
+            <option value="zh-CN">中文</option>
+            <option value="it-IT">Italiano</option>
+        </select>
+        <small>Change the writing and speech language instantly.</small>`;
+    document.body.appendChild(menu);
+    const select=document.getElementById("echoQuickLanguage");
+    if(select){
+        select.value=echoLangCode();
+        select.onchange=function(){
+            setEchoLanguage(this.value);
+            closeEchoLanguageMenu();
+        };
+    }
+    setTimeout(()=>document.addEventListener("click",echoLanguageOutsideClick,{once:true}),0);
+}
+
+function echoLanguageOutsideClick(e){
+    const menu=document.getElementById("echoLanguageMenu");
+    if(menu && !menu.contains(e.target) && e.target.id!=="echoLanguageBadge") menu.remove();
+}
+
+function echoEscape(value){
+    return String(value ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c]));
+}
+
+function echoGetProfile(){
+    try { return JSON.parse(localStorage.getItem("echoshield_profile") || "null"); }
+    catch(e){ return null; }
+}
+
+function echoSetProfile(profile){
+    localStorage.setItem("echoshield_profile", JSON.stringify(profile));
+}
+
+function echoIsLoggedIn(){
+    return localStorage.getItem("echoshield_logged_in") === "true" && !!echoGetProfile();
+}
+
+async function echoHashPassword(password){
+    const data = new TextEncoder().encode(password);
+    const digest = await crypto.subtle.digest("SHA-256", data);
+    return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+function closeEchoProfileMenu(){
+    const menu=document.getElementById("echoProfileMenu");
+    if(menu) menu.remove();
+}
+
+function echoProfileLanguageOptions(id){
+    return `<select id="${id}" class="echo-profile-language" aria-label="Profile language">
+        <option value="en-US">English</option>
+        <option value="hi-IN">हिन्दी</option>
+        <option value="es-ES">Español</option>
+        <option value="fr-FR">Français</option>
+        <option value="zh-CN">中文</option>
+        <option value="it-IT">Italiano</option>
+    </select>`;
+}
+
+function showProfile(){
+    closeEchoLanguageMenu();
+    const old=document.getElementById("echoProfileMenu");
+    if(old){ old.remove(); return; }
+
+    const menu=document.createElement("div");
+    menu.id="echoProfileMenu";
+    menu.className="echo-profile-menu";
+    document.body.appendChild(menu);
+
+    function render(){
+        const profile=echoGetProfile();
+        if(echoIsLoggedIn() && profile){
+            menu.innerHTML=`
+                <div class="echo-profile-head"><div><h3>👤 ${echoT("Profile") || "Profile"}</h3><p>Signed in to EchoShield</p></div><button type="button" class="echo-profile-x" id="echoProfileX">×</button></div>
+                <div class="echo-profile-user">
+                    <strong>${echoEscape(profile.name)}</strong>
+                    <span>${echoEscape(profile.email)}</span>
+                    ${echoProfileLanguageOptions("echoProfileLanguage")}
+                </div>
+                <button class="echo-profile-action echo-profile-danger" id="echoLogoutBtn">Logout</button>
+                <button class="echo-profile-secondary" id="echoCloseProfileBtn">Close</button>`;
+            const lang=document.getElementById("echoProfileLanguage");
+            if(lang){ lang.value=echoLangCode(); lang.onchange=()=>setEchoLanguage(lang.value); }
+            document.getElementById("echoLogoutBtn").onclick=()=>{
+                localStorage.setItem("echoshield_logged_in","false");
+                closeEchoProfileMenu();
+                const badge=document.getElementById("profileBtn");
+                if(badge) badge.title="Login / Create Profile";
+                showProfile();
+            };
+            document.getElementById("echoCloseProfileBtn").onclick=closeEchoProfileMenu;
+            const profileX=document.getElementById("echoProfileX");
+            if(profileX) profileX.onclick=closeEchoProfileMenu;
+            return;
+        }
+
+        menu.innerHTML=`
+            <div class="echo-profile-head"><div><h3>👤 EchoShield Profile</h3><p>Create a profile or login to EchoShield.</p></div><button type="button" class="echo-profile-x" id="echoProfileX">×</button></div>
+            <div class="echo-profile-tabs">
+                <button class="echo-profile-tab active" id="echoLoginTab">Login</button>
+                <button class="echo-profile-tab" id="echoCreateTab">Create Profile</button>
+            </div>
+            <div id="echoProfileForm"></div>`;
+
+        const form=document.getElementById("echoProfileForm");
+        let mode="login";
+
+        function drawForm(){
+            form.innerHTML = mode==="login" ? `
+                <div class="echo-profile-field"><label>Email</label><input id="echoLoginEmail" type="email" autocomplete="username" placeholder="Enter email"></div>
+                <div class="echo-profile-field"><label>Password</label><input id="echoLoginPassword" type="password" autocomplete="current-password" placeholder="Enter password"></div>
+                <button class="echo-profile-action" id="echoLoginBtn">Login</button>
+                <div class="echo-profile-msg" id="echoProfileMsg"></div>` : `
+                <div class="echo-profile-field"><label>Name</label><input id="echoCreateName" type="text" autocomplete="name" placeholder="Enter your name"></div>
+                <div class="echo-profile-field"><label>Email</label><input id="echoCreateEmail" type="email" autocomplete="email" placeholder="Enter email"></div>
+                <div class="echo-profile-field"><label>Password</label><input id="echoCreatePassword" type="password" autocomplete="new-password" placeholder="Create password"></div>
+                <div class="echo-profile-field"><label>Confirm Password</label><input id="echoCreateConfirm" type="password" autocomplete="new-password" placeholder="Confirm password"></div>
+                ${echoProfileLanguageOptions("echoCreateLanguage")}
+                <button class="echo-profile-action" id="echoCreateBtn" style="margin-top:10px">Create Profile</button>
+                <div class="echo-profile-msg" id="echoProfileMsg"></div>`;
+
+            document.getElementById("echoLoginTab").classList.toggle("active",mode==="login");
+            document.getElementById("echoCreateTab").classList.toggle("active",mode==="create");
+            document.getElementById("echoLoginTab").onclick=()=>{mode="login";drawForm();};
+            document.getElementById("echoCreateTab").onclick=()=>{mode="create";drawForm();};
+
+            if(mode==="login"){
+                document.getElementById("echoLoginBtn").onclick=async()=>{
+                    const email=document.getElementById("echoLoginEmail").value.trim().toLowerCase();
+                    const password=document.getElementById("echoLoginPassword").value;
+                    const msg=document.getElementById("echoProfileMsg");
+                    const profile=echoGetProfile();
+                    if(!email || !password){msg.textContent="Please enter email and password.";return;}
+                    if(!profile){msg.textContent="No profile found. Please create a profile first.";return;}
+                    try{
+                        const hash=await echoHashPassword(password);
+                        if(email!==profile.email || hash!==profile.passwordHash){msg.textContent="Incorrect email or password.";return;}
+                        localStorage.setItem("echoshield_logged_in","true");
+                        closeEchoProfileMenu();
+                        showProfile();
+                    }catch(e){msg.textContent="Login is unavailable in this browser. Use the app without login or try another browser.";}
+                };
+            }else{
+                const lang=document.getElementById("echoCreateLanguage"); if(lang) lang.value=echoLangCode();
+                document.getElementById("echoCreateBtn").onclick=async()=>{
+                    const name=document.getElementById("echoCreateName").value.trim();
+                    const email=document.getElementById("echoCreateEmail").value.trim().toLowerCase();
+                    const password=document.getElementById("echoCreatePassword").value;
+                    const confirm=document.getElementById("echoCreateConfirm").value;
+                    const msg=document.getElementById("echoProfileMsg");
+                    if(name.length<2){msg.textContent="Please enter your name.";return;}
+                    if(!/^\S+@\S+\.\S+$/.test(email)){msg.textContent="Please enter a valid email.";return;}
+                    if(password.length<6){msg.textContent="Password must be at least 6 characters.";return;}
+                    if(password!==confirm){msg.textContent="Passwords do not match.";return;}
+                    try{
+                        const profile={name,email,passwordHash:await echoHashPassword(password),createdAt:new Date().toISOString()};
+                        echoSetProfile(profile);
+                        localStorage.setItem("echoshield_logged_in","true");
+                        if(lang) setEchoLanguage(lang.value);
+                        closeEchoProfileMenu();
+                        showProfile();
+                    }catch(e){msg.textContent="Profile creation is unavailable in this browser.";}
+                };
+            }
+        }
+        drawForm();
+        const profileX=document.getElementById("echoProfileX");
+        if(profileX) profileX.onclick=closeEchoProfileMenu;
+    }
+
+    render();
+    setTimeout(()=>document.addEventListener("click",function(e){
+        const m=document.getElementById("echoProfileMenu");
+        const b=document.getElementById("profileBtn");
+        if(m && !m.contains(e.target) && e.target!==b) m.remove();
+    },{once:true}),0);
+}
+
+/* =========================
+   WEBRTC
+========================= */
+
+let pc = null;
+let ws = null;
+
+
+async function call(){
+
+    let room =
+        document.getElementById(
+            "room"
+        ).value.trim();
+
+
+    if(!room){
+
+        alert("Enter a room ID.");
+
+        return;
+
+    }
+
+
+    try{
+
+        pc =
+            new RTCPeerConnection({
+                iceServers:[
+                    {
+                        urls:
+                        "stun:stun.l.google.com:19302"
+                    }
+                ]
+            });
+
+
+        let stream =
+            await navigator.mediaDevices
+            .getUserMedia({
+                audio:true
+            });
+
+
+        stream.getTracks()
+            .forEach(
+                track =>
+                pc.addTrack(
+                    track,
+                    stream
+                )
+            );
+
+
+        ws =
+            new WebSocket(
+                `${location.protocol === "https:"
+                    ? "wss"
+                    : "ws"}://${location.host}/ws/${room}`
+            );
+
+
+        ws.onopen = ()=>{
+
+            document.getElementById(
+                "callStatus"
+            ).textContent =
+                "Joined secure signaling room";
+
+        };
+
+
+        ws.onmessage =
+            async event => {
+
+                let message =
+                    JSON.parse(
+                        event.data
+                    );
+
+
+                if(message.type === "offer"){
+
+                    await pc.setRemoteDescription(
+                        message
+                    );
+
+
+                    let answer =
+                        await pc.createAnswer();
+
+
+                    await pc.setLocalDescription(
+                        answer
+                    );
+
+
+                    ws.send(
+                        JSON.stringify(answer)
+                    );
+
+                }
+
+
+                else if(
+                    message.type === "answer"
+                ){
+
+                    await pc.setRemoteDescription(
+                        message
+                    );
+
+                }
+
+
+                else if(
+                    message.type === "candidate"
+                ){
+
+                    try{
+
+                        await pc.addIceCandidate(
+                            message.candidate
+                        );
+
+                    }
+
+                    catch(error){
+
+                        console.log(
+                            "ICE error",
+                            error
+                        );
+
+                    }
+
+                }
+
+            };
+
+
+        pc.onicecandidate =
+            event => {
+
+                if(
+                    event.candidate &&
+                    ws.readyState === WebSocket.OPEN
+                ){
+
+                    ws.send(
+                        JSON.stringify({
+                            type:"candidate",
+                            candidate:
+                            event.candidate
+                        })
+                    );
+
+                }
+
+            };
+
+
+        setTimeout(
+            async()=>{
+
+                if(
+                    pc.signalingState ===
+                    "stable"
+                ){
+
+                    let offer =
+                        await pc.createOffer();
+
+
+                    await pc.setLocalDescription(
+                        offer
+                    );
+
+
+                    ws.send(
+                        JSON.stringify(offer)
+                    );
+
+                }
+
+            },
+            1000
+        );
+
+    }
+
+    catch(error){
+
+        document.getElementById(
+            "callStatus"
+        ).textContent =
+            "Call error: " +
+            error.message;
+
+    }
+
+}
+
+
+/* =========================
+   SETTINGS / REAL-TIME PROTECTION
+========================= */
+const state = {
+    realTimeProtection: localStorage.getItem("echoshield_realtime") !== "false",
+    threatNotifications: localStorage.getItem("echoshield_notifications") !== "false"
+};
+
+function startRealTimeProtection(){
+    state.realTimeProtection = true;
+    localStorage.setItem("echoshield_realtime", "true");
+    showPage("live");
+    const rec=document.getElementById("rec");
+    if(rec) rec.focus();
+    toast("Real-time protection is ready", "LOW");
+}
+
+function toggleSetting(element,key){
+    state[key]=!state[key];
+    localStorage.setItem("echoshield_" + (key==="threatNotifications"?"notifications":"realtime"), state[key]);
+    element.classList.toggle("on", state[key]);
+}
+
+function initSettings(){
+    const keys=["realTimeProtection","voiceMonitoring","threatNotifications","transactionProtection"];
+    keys.forEach(key=>{
+        const el=document.querySelector('#settings .toggle[data-setting="'+key+'"]');
+        const saved=localStorage.getItem("echoshield_"+key);
+        const enabled=saved!=="false";
+        if(el){
+            el.classList.toggle("on",enabled);
+            el.onclick=()=>{
+                const next=!el.classList.contains("on");
+                el.classList.toggle("on",next);
+                localStorage.setItem("echoshield_"+key,next);
+            };
+        }
+    });
+    const savedTheme=localStorage.getItem("echoshield_theme")||"dark";
+    applyTheme(savedTheme);
+    const fs=localStorage.getItem("echoshield_font")||"16px";
+    const fontSize=document.getElementById("fontSizeSelect");
+    if(fontSize){
+        fontSize.value=fs;
+        document.documentElement.style.setProperty("--echo-font-size",fs);
+        document.body.style.fontSize=fs;
+        fontSize.onchange=e=>{
+            localStorage.setItem("echoshield_font",e.target.value);
+            document.documentElement.style.setProperty("--echo-font-size",e.target.value);
+            document.body.style.fontSize=e.target.value;
+        };
+    }
+    const light=document.getElementById("lightModeBtn");
+    const dark=document.getElementById("darkModeBtn");
+    if(light) light.onclick=()=>applyTheme("light");
+    if(dark) dark.onclick=()=>applyTheme("dark");
+}
+function applyFontLanguage(language){
+    const fonts={
+        latin:'Inter, "Segoe UI", Arial, sans-serif',
+        devanagari:'"Noto Sans Devanagari", "Nirmala UI", "Mangal", "Segoe UI", sans-serif',
+        system:'system-ui, sans-serif'
+    };
+    document.body.style.fontFamily=fonts[language]||fonts.latin;
+}
+function applyTheme(theme){
+    localStorage.setItem("echoshield_theme",theme);
+    document.body.classList.toggle("light-mode",theme==="light");
+}
+
+async function checkAASISTStatus(){
+    try{
+        const response=await fetch("/api/aasist/status",{cache:"no-store"});
+        const data=await response.json();
+        const live=document.getElementById("liveStatus");
+        if(live && data.available){
+            live.textContent="AASIST ready • pretrained model loaded • 16 kHz analysis";
+        }else if(live){
+            live.textContent="AASIST unavailable: "+(data.error||"model could not be loaded");
+        }
+    }catch(error){
+        console.error("AASIST status error:",error);
+    }
+}
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+incidents();
+initSettings();
+loadReports();
+checkAASISTStatus();
+setInterval(()=>{ if(document.getElementById("fraud")?.classList.contains("active")) incidents(); if(document.getElementById("reports")?.classList.contains("active")) loadReports(); },5000);
+
+/* ============================================================
+   ECHOSHIELD MULTILINGUAL LANGUAGE SYSTEM
+   Keeps EchoShield brand name unchanged.
+   Languages: English, Hindi, Spanish, French, Mandarin, Italian.
+============================================================ */
+
+const ECHO_LANGUAGES = {
+    "en-US": {name:"English", native:"English", short:"EN", speech:"en-US"},
+    "hi-IN": {name:"Hindi", native:"हिन्दी", short:"HI", speech:"hi-IN"},
+    "es-ES": {name:"Spanish", native:"Español", short:"ES", speech:"es-ES"},
+    "fr-FR": {name:"French", native:"Français", short:"FR", speech:"fr-FR"},
+    "zh-CN": {name:"Chinese", native:"中文", short:"ZH", speech:"zh-CN"},
+    "it-IT": {name:"Italian", native:"Italiano", short:"IT", speech:"it-IT"}
+};
+
+const ECHO_I18N = {
+"en-US": {
+    Security_Dashboard:"Security Dashboard", Live_Voice_Protection:"Live Voice Protection", Secure_WebRTC_Calls:"Secure WebRTC Calls", Voice_Scanner:"Voice Scanner", Fraud_Intelligence:"Fraud Intelligence", Security_Assistant:"Security Assistant", Security_Reports:"Security Reports", Settings:"Settings",
+    Home:"Home", Secure_Calls:"Secure Calls", SECURITY:"SECURITY", SYSTEM:"SYSTEM",
+    Security_Notifications:"Security Notifications", Clear:"Clear", No_alerts:"No new security alerts.",
+    Protect:"Protect Every Conversation", ProtectDesc:"Detect AI-powered voice impersonation before it becomes fraud.", Ready:"PROTECTION READY", Protection:"EchoShield Protection", ProtectionDesc:"Real-time voice analysis, caller verification and fraud-risk intelligence in one security layer.", StartLive:"🎙️ Start Live Protection", Quick:"Quick Actions",
+    MonitorMic:"Monitor microphone audio in real time.", SecureCall:"Secure Call", StartWebRTC:"Start a protected WebRTC call.", UploadAnalyze:"Upload and analyze a voice recording.", Overview:"Security Overview", ProtectionStatus:"Protection Status", AIMonitoring:"AI Monitoring", Active:"Active", Online:"Online",
+    LiveTitle:"🎙️ Live Voice Protection", LiveDesc:"Record at least 4.04 seconds, then run the real pretrained AASIST anti-spoofing analysis.", LiveCard:"Real-Time Voice Monitoring", LiveCardDesc:"Speak naturally and stop the recording when you are finished.", StartRecording:"🎙️ Start Recording", AnalyzeVoice:"🧠 Analyze Voice", MicReady:"Microphone ready", VoiceResult:"Voice Security Result", Risk:"RISK", AnalysisComplete:"Analysis complete", SecurityAction:"SECURITY ACTION", AASISTNote:"⚠️ AASIST classifier signal. This percentage is a model score, not a calibrated probability.",
+    CallsTitle:"📞 Secure WebRTC Calls", CallsDesc:"Controlled real-time communication with EchoShield protection.", StartProtected:"Start Protected Call", RoomHelp:"Enter the same room ID on both devices.", JoinCall:"📞 Join Secure Call", ReadyConnect:"Ready to connect", Connection:"Connection", Protected:"🟢 Protected", AudioMonitoring:"Audio Monitoring", AIDetection:"AI Detection",
+    ScannerTitle:"📁 Voice Scanner", ScannerDesc:"Upload a WAV recording (4.04+ seconds recommended) for real pretrained AASIST analysis.", AnalyzeRecording:"Analyze Voice Recording", SelectWav:"Select a WAV audio file (recommended 4.04+ seconds)", AnalyzeButton:"🔍 Analyze Voice", AnalysisResult:"🧠 Analysis Result",
+    FraudTitle:"🛡️ Fraud Intelligence", FraudDesc:"Review previous EchoShield security incidents.", Incidents:"Security Incidents", Historical:"Historical risk events detected by the system.", Refresh:"↻ Refresh", Incident:"Incident", RiskCol:"Risk", Decision:"Decision", Synthetic:"Synthetic",
+    AssistantTitle:"🤖 Security Assistant", AssistantDesc:"Get security guidance from EchoShield.", Copilot:"EchoShield Security Copilot", CopilotDesc:"Ask about suspicious calls, risk levels and transaction safety.", AskAssistant:"Ask Assistant", Placeholder:"Ask a security question...", WhyFake:"Why was this voice fake?", Patterns:"What patterns did AASIST detect?", Suspicious:"Suspicious call precautions", WhatAASIST:"What is AASIST?", WhatLive:"What is Live Voice?", HowUse:"How do I use the app?", Continue:"Should I continue?", Cloning:"Voice cloning detected?",
+    ReportsTitle:"📊 Security Reports", ReportsDesc:"Overview of EchoShield protection activity.", Total:"Total Incidents", High:"High Risk", Verification:"Verification", Distribution:"Risk Distribution", DistributionDesc:"Live counts from saved AASIST incidents.", ByRisk:"Incidents by risk level", NoIncidents:"No analyzed incidents yet. Analyze a WAV voice to populate this graph.",
+    SettingsTitle:"⚙️ Settings", SettingsDesc:"Configure EchoShield protection, screen and display preferences.", RTP:"Real-Time Protection", RTPDesc:"Monitor active voice sessions.", VM:"Voice Monitoring", VMDesc:"Analyze voice authenticity signals.", TN:"Threat Notifications", TNDesc:"Show security warnings for risky calls.", TP:"Transaction Protection", TPDesc:"Require verification before sensitive actions.", Appearance:"🖥️ Screen Appearance", ScreenMode:"Screen Mode", ScreenModeDesc:"Switch between Light and Dark dashboard.", Light:"☀️ Light", Dark:"🌙 Dark", FontSize:"Font Size", FontSizeDesc:"Change dashboard text size.", Small:"Small", Medium:"Medium", Large:"Large", ExtraLarge:"Extra Large", Language:"🌐 Language Support", LanguageDesc:"Change the app language anytime. Your selection is saved and used for text, speech recognition and voice responses.",
+    Low:"LOW", MediumRisk:"MEDIUM", HighRisk:"HIGH", Allow:"ALLOW", Verify:"VERIFY", Block:"BLOCK", Hold:"HOLD",
+    HumanVoice:"Human / Genuine Voice", SyntheticVoice:"AI / Synthetic Voice", DecisionLabel:"Decision", AnalyzedBy:"Analyzed by",
+    LikelyAI:"LIKELY AI / SYNTHETIC VOICE", Review:"REVIEW REQUIRED", LikelyHuman:"LIKELY HUMAN / GENUINE VOICE",
+    AASISTReady:"AASIST ready • pretrained model loaded • 16 kHz analysis", AASISTFailed:"AASIST unavailable", AnalysisFailed:"AASIST analysis failed", RecordFirst:"Record your voice first.", WavOnly:"For real AASIST analysis, please upload a WAV file.", NeedAudio:"Please provide at least 4.04 seconds of audio.",
+    SpeechListening:"Listening… speak now.", SpeechStopped:"Voice input stopped.", SpeechUnavailable:"Speech recognition is unavailable in this browser. You can type your message instead.", SpeechError:"Could not understand the voice input. Please try again or type your message.", SpeechPermission:"Microphone permission is required for voice input.", TTSUnavailable:"Text-to-speech is unavailable in this browser. Text remains available.",
+    AssistantSpeaking:"Reading response aloud…", LanguageChanged:"Language changed to"
+},
+"hi-IN": {Security_Dashboard:"सुरक्षा डैशबोर्ड",Live_Voice_Protection:"लाइव वॉइस सुरक्षा",Secure_WebRTC_Calls:"सुरक्षित WebRTC कॉल",Voice_Scanner:"वॉइस स्कैनर",Fraud_Intelligence:"फ्रॉड इंटेलिजेंस",Security_Assistant:"सुरक्षा सहायक",Security_Reports:"सुरक्षा रिपोर्ट",Settings:"सेटिंग्स",Home:"होम",Secure_Calls:"सुरक्षित कॉल",SECURITY:"सुरक्षा",SYSTEM:"सिस्टम",Security_Notifications:"सुरक्षा सूचनाएँ",Clear:"साफ़ करें",No_alerts:"कोई नई सुरक्षा चेतावनी नहीं।",Protect:"हर बातचीत को सुरक्षित रखें",ProtectDesc:"AI-आधारित आवाज़ की नकल को धोखाधड़ी बनने से पहले पहचानें।",Ready:"सुरक्षा तैयार है",Protection:"EchoShield सुरक्षा",ProtectionDesc:"रियल-टाइम वॉइस विश्लेषण, कॉलर सत्यापन और फ्रॉड-रिस्क इंटेलिजेंस एक सुरक्षा परत में।",StartLive:"🎙️ लाइव सुरक्षा शुरू करें",Quick:"त्वरित कार्रवाइयाँ",MonitorMic:"माइक्रोफ़ोन ऑडियो को रियल टाइम में मॉनिटर करें।",SecureCall:"सुरक्षित कॉल",StartWebRTC:"सुरक्षित WebRTC कॉल शुरू करें।",UploadAnalyze:"वॉइस रिकॉर्डिंग अपलोड और विश्लेषण करें।",Overview:"सुरक्षा अवलोकन",ProtectionStatus:"सुरक्षा स्थिति",AIMonitoring:"AI मॉनिटरिंग",Active:"सक्रिय",Online:"ऑनलाइन",LiveTitle:"🎙️ लाइव वॉइस सुरक्षा",LiveDesc:"कम से कम 4.04 सेकंड रिकॉर्ड करें और असली pretrained AASIST anti-spoofing विश्लेषण चलाएँ।",LiveCard:"रियल-टाइम वॉइस मॉनिटरिंग",LiveCardDesc:"स्वाभाविक रूप से बोलें और पूरा होने पर रिकॉर्डिंग रोकें।",StartRecording:"🎙️ रिकॉर्डिंग शुरू करें",AnalyzeVoice:"🧠 वॉइस विश्लेषण करें",MicReady:"माइक्रोफ़ोन तैयार है",VoiceResult:"वॉइस सुरक्षा परिणाम",Risk:"जोखिम",AnalysisComplete:"विश्लेषण पूरा हुआ",SecurityAction:"सुरक्षा कार्रवाई",AASISTNote:"⚠️ AASIST classifier signal। यह प्रतिशत मॉडल स्कोर है, calibrated probability नहीं।",CallsTitle:"📞 सुरक्षित WebRTC कॉल",CallsDesc:"EchoShield सुरक्षा के साथ नियंत्रित रियल-टाइम संचार।",StartProtected:"सुरक्षित कॉल शुरू करें",RoomHelp:"दोनों डिवाइस पर एक ही room ID डालें।",JoinCall:"📞 सुरक्षित कॉल से जुड़ें",ReadyConnect:"कनेक्ट होने के लिए तैयार",Connection:"कनेक्शन",Protected:"🟢 सुरक्षित",AudioMonitoring:"ऑडियो मॉनिटरिंग",AIDetection:"AI पहचान",ScannerTitle:"📁 वॉइस स्कैनर",ScannerDesc:"असली pretrained AASIST विश्लेषण के लिए WAV रिकॉर्डिंग अपलोड करें (4.04+ सेकंड अनुशंसित)।",AnalyzeRecording:"वॉइस रिकॉर्डिंग का विश्लेषण",SelectWav:"WAV ऑडियो फ़ाइल चुनें (4.04+ सेकंड अनुशंसित)",AnalyzeButton:"🔍 वॉइस विश्लेषण करें",AnalysisResult:"🧠 विश्लेषण परिणाम",FraudTitle:"🛡️ फ्रॉड इंटेलिजेंस",FraudDesc:"पिछली EchoShield सुरक्षा घटनाएँ देखें।",Incidents:"सुरक्षा घटनाएँ",Historical:"सिस्टम द्वारा पहचाने गए पिछले जोखिम इवेंट।",Refresh:"↻ रीफ़्रेश",Incident:"घटना",RiskCol:"जोखिम",Decision:"निर्णय",Synthetic:"सिंथेटिक",AssistantTitle:"🤖 सुरक्षा सहायक",AssistantDesc:"EchoShield से सुरक्षा मार्गदर्शन प्राप्त करें।",Copilot:"EchoShield Security Copilot",CopilotDesc:"संदिग्ध कॉल, जोखिम स्तर और लेनदेन सुरक्षा के बारे में पूछें।",AskAssistant:"सहायक से पूछें",Placeholder:"सुरक्षा प्रश्न पूछें...",WhyFake:"यह आवाज़ नकली क्यों थी?",Patterns:"AASIST ने कौन से पैटर्न पहचाने?",Suspicious:"संदिग्ध कॉल में क्या सावधानी रखें?",WhatAASIST:"AASIST क्या है?",WhatLive:"Live Voice क्या है?",HowUse:"ऐप का उपयोग कैसे करें?",Continue:"क्या मुझे जारी रखना चाहिए?",Cloning:"वॉइस क्लोनिंग मिली?",ReportsTitle:"📊 सुरक्षा रिपोर्ट",ReportsDesc:"EchoShield सुरक्षा गतिविधि का अवलोकन।",Total:"कुल घटनाएँ",High:"उच्च जोखिम",Verification:"सत्यापन",Distribution:"जोखिम वितरण",DistributionDesc:"सेव की गई AASIST घटनाओं की लाइव गिनती।",ByRisk:"जोखिम स्तर के अनुसार घटनाएँ",NoIncidents:"अभी कोई विश्लेषित घटना नहीं है। ग्राफ भरने के लिए WAV वॉइस का विश्लेषण करें।",SettingsTitle:"⚙️ सेटिंग्स",SettingsDesc:"EchoShield सुरक्षा, स्क्रीन और डिस्प्ले प्राथमिकताएँ कॉन्फ़िगर करें।",RTP:"रियल-टाइम सुरक्षा",RTPDesc:"सक्रिय वॉइस सत्र मॉनिटर करें।",VM:"वॉइस मॉनिटरिंग",VMDesc:"वॉइस की प्रामाणिकता के संकेतों का विश्लेषण करें।",TN:"खतरा सूचनाएँ",TNDesc:"जोखिम वाली कॉल के लिए सुरक्षा चेतावनी दिखाएँ।",TP:"लेनदेन सुरक्षा",TPDesc:"संवेदनशील कार्रवाई से पहले सत्यापन आवश्यक करें।",Appearance:"🖥️ स्क्रीन रूप",ScreenMode:"स्क्रीन मोड",ScreenModeDesc:"लाइट और डार्क डैशबोर्ड के बीच बदलें।",Light:"☀️ लाइट",Dark:"🌙 डार्क",FontSize:"फ़ॉन्ट आकार",FontSizeDesc:"डैशबोर्ड टेक्स्ट का आकार बदलें।",Small:"छोटा",Medium:"मध्यम",Large:"बड़ा",ExtraLarge:"बहुत बड़ा",Language:"🌐 भाषा सहायता",LanguageDesc:"किसी भी समय ऐप की भाषा बदलें। चयन सेव रहेगा और टेक्स्ट, स्पीच रिकग्निशन व वॉइस रिस्पॉन्स में उपयोग होगा।",Low:"कम",MediumRisk:"मध्यम",HighRisk:"उच्च",Allow:"अनुमति दें",Verify:"सत्यापित करें",Block:"ब्लॉक करें",Hold:"रोकें",HumanVoice:"मानव / वास्तविक आवाज़",SyntheticVoice:"AI / सिंथेटिक आवाज़",DecisionLabel:"निर्णय",AnalyzedBy:"विश्लेषण मॉडल",LikelyAI:"संभावित AI / सिंथेटिक आवाज़",Review:"समीक्षा आवश्यक",LikelyHuman:"संभावित मानव / वास्तविक आवाज़",AASISTReady:"AASIST तैयार है • pretrained मॉडल लोड है • 16 kHz विश्लेषण",AASISTFailed:"AASIST उपलब्ध नहीं है",AnalysisFailed:"AASIST विश्लेषण विफल हुआ",RecordFirst:"पहले अपनी आवाज़ रिकॉर्ड करें।",WavOnly:"वास्तविक AASIST विश्लेषण के लिए WAV फ़ाइल अपलोड करें।",NeedAudio:"कम से कम 4.04 सेकंड का ऑडियो दें।",SpeechListening:"सुन रहा है… अभी बोलें।",SpeechStopped:"वॉइस इनपुट बंद हो गया।",SpeechUnavailable:"इस ब्राउज़र में स्पीच रिकग्निशन उपलब्ध नहीं है। आप संदेश टाइप कर सकते हैं।",SpeechError:"वॉइस इनपुट समझ नहीं आया। फिर से प्रयास करें या संदेश टाइप करें।",SpeechPermission:"वॉइस इनपुट के लिए माइक्रोफ़ोन अनुमति आवश्यक है।",TTSUnavailable:"इस ब्राउज़र में टेक्स्ट-टू-स्पीच उपलब्ध नहीं है। टेक्स्ट उपलब्ध रहेगा।",AssistantSpeaking:"रिस्पॉन्स पढ़ा जा रहा है…",LanguageChanged:"भाषा बदलकर"},
+"es-ES": {Security_Dashboard:"Panel de seguridad",Live_Voice_Protection:"Protección de voz en vivo",Secure_WebRTC_Calls:"Llamadas WebRTC seguras",Voice_Scanner:"Escáner de voz",Fraud_Intelligence:"Inteligencia contra el fraude",Security_Assistant:"Asistente de seguridad",Security_Reports:"Informes de seguridad",Settings:"Configuración",Home:"Inicio",Secure_Calls:"Llamadas seguras",SECURITY:"SEGURIDAD",SYSTEM:"SISTEMA",Security_Notifications:"Notificaciones de seguridad",Clear:"Borrar",No_alerts:"No hay nuevas alertas de seguridad.",Protect:"Protege cada conversación",ProtectDesc:"Detecta la suplantación de voz mediante IA antes de que se convierta en fraude.",Ready:"PROTECCIÓN LISTA",Protection:"Protección de EchoShield",ProtectionDesc:"Análisis de voz en tiempo real, verificación del interlocutor e inteligencia de riesgo de fraude en una sola capa de seguridad.",StartLive:"🎙️ Iniciar protección en vivo",Quick:"Acciones rápidas",MonitorMic:"Monitorea el audio del micrófono en tiempo real.",SecureCall:"Llamada segura",StartWebRTC:"Inicia una llamada WebRTC protegida.",UploadAnalyze:"Sube y analiza una grabación de voz.",Overview:"Resumen de seguridad",ProtectionStatus:"Estado de protección",AIMonitoring:"Monitoreo de IA",Active:"Activo",Online:"En línea",LiveTitle:"🎙️ Protección de voz en vivo",LiveDesc:"Graba al menos 4.04 segundos y ejecuta el análisis anti-spoofing AASIST preentrenado real.",LiveCard:"Monitoreo de voz en tiempo real",LiveCardDesc:"Habla de forma natural y detén la grabación cuando termines.",StartRecording:"🎙️ Iniciar grabación",AnalyzeVoice:"🧠 Analizar voz",MicReady:"Micrófono listo",VoiceResult:"Resultado de seguridad de voz",Risk:"RIESGO",AnalysisComplete:"Análisis completo",SecurityAction:"ACCIÓN DE SEGURIDAD",AASISTNote:"⚠️ Señal del clasificador AASIST. Este porcentaje es una puntuación del modelo, no una probabilidad calibrada.",CallsTitle:"📞 Llamadas WebRTC seguras",CallsDesc:"Comunicación en tiempo real controlada con protección de EchoShield.",StartProtected:"Iniciar llamada protegida",RoomHelp:"Introduce el mismo ID de sala en ambos dispositivos.",JoinCall:"📞 Unirse a llamada segura",ReadyConnect:"Listo para conectar",Connection:"Conexión",Protected:"🟢 Protegida",AudioMonitoring:"Monitoreo de audio",AIDetection:"Detección de IA",ScannerTitle:"📁 Escáner de voz",ScannerDesc:"Sube una grabación WAV (se recomiendan 4.04+ segundos) para el análisis AASIST preentrenado real.",AnalyzeRecording:"Analizar grabación de voz",SelectWav:"Selecciona un archivo WAV (se recomiendan 4.04+ segundos)",AnalyzeButton:"🔍 Analizar voz",AnalysisResult:"🧠 Resultado del análisis",FraudTitle:"🛡️ Inteligencia contra el fraude",FraudDesc:"Revisa incidentes de seguridad anteriores de EchoShield.",Incidents:"Incidentes de seguridad",Historical:"Eventos de riesgo históricos detectados por el sistema.",Refresh:"↻ Actualizar",Incident:"Incidente",RiskCol:"Riesgo",Decision:"Decisión",Synthetic:"Sintética",AssistantTitle:"🤖 Asistente de seguridad",AssistantDesc:"Obtén orientación de seguridad de EchoShield.",Copilot:"EchoShield Security Copilot",CopilotDesc:"Pregunta sobre llamadas sospechosas, niveles de riesgo y seguridad de transacciones.",AskAssistant:"Preguntar al asistente",Placeholder:"Haz una pregunta de seguridad...",WhyFake:"¿Por qué esta voz era falsa?",Patterns:"¿Qué patrones detectó AASIST?",Suspicious:"Precauciones ante llamadas sospechosas",WhatAASIST:"¿Qué es AASIST?",WhatLive:"¿Qué es Live Voice?",HowUse:"¿Cómo uso la aplicación?",Continue:"¿Debo continuar?",Cloning:"¿Se detectó clonación de voz?",ReportsTitle:"📊 Informes de seguridad",ReportsDesc:"Resumen de la actividad de protección de EchoShield.",Total:"Incidentes totales",High:"Alto riesgo",Verification:"Verificación",Distribution:"Distribución del riesgo",DistributionDesc:"Conteos en vivo de incidentes AASIST guardados.",ByRisk:"Incidentes por nivel de riesgo",NoIncidents:"Aún no hay incidentes analizados. Analiza una voz WAV para llenar este gráfico.",SettingsTitle:"⚙️ Configuración",SettingsDesc:"Configura la protección de EchoShield, la pantalla y las preferencias de visualización.",RTP:"Protección en tiempo real",RTPDesc:"Monitorea sesiones de voz activas.",VM:"Monitoreo de voz",VMDesc:"Analiza señales de autenticidad de la voz.",TN:"Notificaciones de amenazas",TNDesc:"Muestra advertencias de seguridad para llamadas riesgosas.",TP:"Protección de transacciones",TPDesc:"Requiere verificación antes de acciones sensibles.",Appearance:"🖥️ Apariencia de pantalla",ScreenMode:"Modo de pantalla",ScreenModeDesc:"Cambia entre panel claro y oscuro.",Light:"☀️ Claro",Dark:"🌙 Oscuro",FontSize:"Tamaño de fuente",FontSizeDesc:"Cambia el tamaño del texto del panel.",Small:"Pequeño",Medium:"Mediano",Large:"Grande",ExtraLarge:"Extra grande",Language:"🌐 Soporte multilingüe",LanguageDesc:"Cambia el idioma de la aplicación en cualquier momento. Se guarda y se usa para texto, reconocimiento de voz y respuestas de voz.",Low:"BAJO",MediumRisk:"MEDIO",HighRisk:"ALTO",Allow:"PERMITIR",Verify:"VERIFICAR",Block:"BLOQUEAR",Hold:"PAUSAR",HumanVoice:"Voz humana / auténtica",SyntheticVoice:"Voz IA / sintética",DecisionLabel:"Decisión",AnalyzedBy:"Analizado por",LikelyAI:"VOZ PROBABLEMENTE IA / SINTÉTICA",Review:"REVISIÓN NECESARIA",LikelyHuman:"VOZ PROBABLEMENTE HUMANA / AUTÉNTICA",AASISTReady:"AASIST listo • modelo preentrenado cargado • análisis de 16 kHz",AASISTFailed:"AASIST no disponible",AnalysisFailed:"Falló el análisis AASIST",RecordFirst:"Primero graba tu voz.",WavOnly:"Para el análisis AASIST real, sube un archivo WAV.",NeedAudio:"Proporciona al menos 4.04 segundos de audio.",SpeechListening:"Escuchando… habla ahora.",SpeechStopped:"Entrada de voz detenida.",SpeechUnavailable:"El reconocimiento de voz no está disponible en este navegador. Puedes escribir el mensaje.",SpeechError:"No se pudo entender la entrada de voz. Inténtalo de nuevo o escribe el mensaje.",SpeechPermission:"Se necesita permiso del micrófono para la entrada de voz.",TTSUnavailable:"La conversión de texto a voz no está disponible en este navegador. El texto seguirá disponible.",AssistantSpeaking:"Leyendo la respuesta en voz alta…",LanguageChanged:"Idioma cambiado a"},
+"fr-FR": {Security_Dashboard:"Tableau de sécurité",Live_Voice_Protection:"Protection vocale en direct",Secure_WebRTC_Calls:"Appels WebRTC sécurisés",Voice_Scanner:"Scanner vocal",Fraud_Intelligence:"Renseignement antifraude",Security_Assistant:"Assistant de sécurité",Security_Reports:"Rapports de sécurité",Settings:"Paramètres",Home:"Accueil",Secure_Calls:"Appels sécurisés",SECURITY:"SÉCURITÉ",SYSTEM:"SYSTÈME",Security_Notifications:"Notifications de sécurité",Clear:"Effacer",No_alerts:"Aucune nouvelle alerte de sécurité.",Protect:"Protégez chaque conversation",ProtectDesc:"Détectez l’usurpation vocale par IA avant qu’elle ne devienne une fraude.",Ready:"PROTECTION PRÊTE",Protection:"Protection EchoShield",ProtectionDesc:"Analyse vocale en temps réel, vérification de l’appelant et renseignement sur le risque de fraude dans une seule couche de sécurité.",StartLive:"🎙️ Démarrer la protection en direct",Quick:"Actions rapides",MonitorMic:"Surveillez l’audio du microphone en temps réel.",SecureCall:"Appel sécurisé",StartWebRTC:"Démarrez un appel WebRTC protégé.",UploadAnalyze:"Téléchargez et analysez un enregistrement vocal.",Overview:"Aperçu de sécurité",ProtectionStatus:"État de la protection",AIMonitoring:"Surveillance IA",Active:"Actif",Online:"En ligne",LiveTitle:"🎙️ Protection vocale en direct",LiveDesc:"Enregistrez au moins 4,04 secondes, puis lancez la vraie analyse anti-usurpation AASIST préentraînée.",LiveCard:"Surveillance vocale en temps réel",LiveCardDesc:"Parlez naturellement et arrêtez l’enregistrement lorsque vous avez terminé.",StartRecording:"🎙️ Démarrer l’enregistrement",AnalyzeVoice:"🧠 Analyser la voix",MicReady:"Microphone prêt",VoiceResult:"Résultat de sécurité vocale",Risk:"RISQUE",AnalysisComplete:"Analyse terminée",SecurityAction:"ACTION DE SÉCURITÉ",AASISTNote:"⚠️ Signal du classificateur AASIST. Ce pourcentage est un score du modèle, pas une probabilité calibrée.",CallsTitle:"📞 Appels WebRTC sécurisés",CallsDesc:"Communication en temps réel contrôlée avec la protection EchoShield.",StartProtected:"Démarrer un appel protégé",RoomHelp:"Entrez le même ID de salle sur les deux appareils.",JoinCall:"📞 Rejoindre l’appel sécurisé",ReadyConnect:"Prêt à se connecter",Connection:"Connexion",Protected:"🟢 Protégée",AudioMonitoring:"Surveillance audio",AIDetection:"Détection IA",ScannerTitle:"📁 Scanner vocal",ScannerDesc:"Téléchargez un enregistrement WAV (4,04+ secondes recommandées) pour la vraie analyse AASIST préentraînée.",AnalyzeRecording:"Analyser l’enregistrement vocal",SelectWav:"Sélectionnez un fichier WAV (4,04+ secondes recommandées)",AnalyzeButton:"🔍 Analyser la voix",AnalysisResult:"🧠 Résultat de l’analyse",FraudTitle:"🛡️ Renseignement antifraude",FraudDesc:"Consultez les incidents de sécurité EchoShield précédents.",Incidents:"Incidents de sécurité",Historical:"Événements de risque historiques détectés par le système.",Refresh:"↻ Actualiser",Incident:"Incident",RiskCol:"Risque",Decision:"Décision",Synthetic:"Synthétique",AssistantTitle:"🤖 Assistant de sécurité",AssistantDesc:"Obtenez des conseils de sécurité avec EchoShield.",Copilot:"EchoShield Security Copilot",CopilotDesc:"Posez des questions sur les appels suspects, les niveaux de risque et la sécurité des transactions.",AskAssistant:"Demander à l’assistant",Placeholder:"Posez une question de sécurité...",WhyFake:"Pourquoi cette voix était-elle fausse ?",Patterns:"Quels modèles AASIST a-t-il détectés ?",Suspicious:"Précautions pour les appels suspects",WhatAASIST:"Qu’est-ce qu’AASIST ?",WhatLive:"Qu’est-ce que Live Voice ?",HowUse:"Comment utiliser l’application ?",Continue:"Dois-je continuer ?",Cloning:"Clonage vocal détecté ?",ReportsTitle:"📊 Rapports de sécurité",ReportsDesc:"Vue d’ensemble de l’activité de protection EchoShield.",Total:"Total des incidents",High:"Risque élevé",Verification:"Vérification",Distribution:"Répartition des risques",DistributionDesc:"Comptes en direct des incidents AASIST enregistrés.",ByRisk:"Incidents par niveau de risque",NoIncidents:"Aucun incident analysé pour le moment. Analysez une voix WAV pour remplir ce graphique.",SettingsTitle:"⚙️ Paramètres",SettingsDesc:"Configurez la protection EchoShield, l’écran et les préférences d’affichage.",RTP:"Protection en temps réel",RTPDesc:"Surveillez les sessions vocales actives.",VM:"Surveillance vocale",VMDesc:"Analysez les signaux d’authenticité de la voix.",TN:"Notifications de menace",TNDesc:"Affichez des avertissements de sécurité pour les appels à risque.",TP:"Protection des transactions",TPDesc:"Exigez une vérification avant les actions sensibles.",Appearance:"🖥️ Apparence de l’écran",ScreenMode:"Mode d’écran",ScreenModeDesc:"Basculez entre le tableau de bord clair et sombre.",Light:"☀️ Clair",Dark:"🌙 Sombre",FontSize:"Taille de police",FontSizeDesc:"Modifiez la taille du texte du tableau de bord.",Small:"Petit",Medium:"Moyen",Large:"Grand",ExtraLarge:"Très grand",Language:"🌐 Support multilingue",LanguageDesc:"Changez la langue de l’application à tout moment. Elle est enregistrée et utilisée pour le texte, la reconnaissance vocale et les réponses vocales.",Low:"FAIBLE",MediumRisk:"MOYEN",HighRisk:"ÉLEVÉ",Allow:"AUTORISER",Verify:"VÉRIFIER",Block:"BLOQUER",Hold:"PAUSE",HumanVoice:"Voix humaine / authentique",SyntheticVoice:"Voix IA / synthétique",DecisionLabel:"Décision",AnalyzedBy:"Analysé par",LikelyAI:"VOIX PROBABLEMENT IA / SYNTHÉTIQUE",Review:"VÉRIFICATION REQUISE",LikelyHuman:"VOIX PROBABLEMENT HUMAINE / AUTHENTIQUE",AASISTReady:"AASIST prêt • modèle préentraîné chargé • analyse 16 kHz",AASISTFailed:"AASIST indisponible",AnalysisFailed:"Échec de l’analyse AASIST",RecordFirst:"Enregistrez d’abord votre voix.",WavOnly:"Pour une analyse AASIST réelle, téléchargez un fichier WAV.",NeedAudio:"Fournissez au moins 4,04 secondes d’audio.",SpeechListening:"Écoute… parlez maintenant.",SpeechStopped:"Entrée vocale arrêtée.",SpeechUnavailable:"La reconnaissance vocale n’est pas disponible dans ce navigateur. Vous pouvez saisir votre message.",SpeechError:"Impossible de comprendre l’entrée vocale. Réessayez ou saisissez votre message.",SpeechPermission:"L’autorisation du microphone est nécessaire pour la saisie vocale.",TTSUnavailable:"La synthèse vocale n’est pas disponible dans ce navigateur. Le texte reste disponible.",AssistantSpeaking:"Lecture de la réponse à voix haute…",LanguageChanged:"Langue changée en"},
+"zh-CN": {Security_Dashboard:"安全仪表板",Live_Voice_Protection:"实时语音保护",Secure_WebRTC_Calls:"安全 WebRTC 通话",Voice_Scanner:"语音扫描器",Fraud_Intelligence:"欺诈情报",Security_Assistant:"安全助手",Security_Reports:"安全报告",Settings:"设置",Home:"主页",Secure_Calls:"安全通话",SECURITY:"安全",SYSTEM:"系统",Security_Notifications:"安全通知",Clear:"清除",No_alerts:"没有新的安全警报。",Protect:"保护每一次对话",ProtectDesc:"在 AI 语音冒充演变成诈骗之前发现它。",Ready:"保护已就绪",Protection:"EchoShield 保护",ProtectionDesc:"在一个安全层中提供实时语音分析、来电者验证和欺诈风险情报。",StartLive:"🎙️ 开始实时保护",Quick:"快速操作",MonitorMic:"实时监控麦克风音频。",SecureCall:"安全通话",StartWebRTC:"开始受保护的 WebRTC 通话。",UploadAnalyze:"上传并分析语音录音。",Overview:"安全概览",ProtectionStatus:"保护状态",AIMonitoring:"AI 监控",Active:"已启用",Online:"在线",LiveTitle:"🎙️ 实时语音保护",LiveDesc:"录制至少 4.04 秒，然后运行真实的预训练 AASIST 反欺骗分析。",LiveCard:"实时语音监控",LiveCardDesc:"自然说话，完成后停止录音。",StartRecording:"🎙️ 开始录音",AnalyzeVoice:"🧠 分析语音",MicReady:"麦克风已就绪",VoiceResult:"语音安全结果",Risk:"风险",AnalysisComplete:"分析完成",SecurityAction:"安全操作",AASISTNote:"⚠️ AASIST 分类器信号。该百分比是模型分数，并非经过校准的概率。",CallsTitle:"📞 安全 WebRTC 通话",CallsDesc:"使用 EchoShield 保护进行受控的实时通信。",StartProtected:"开始受保护通话",RoomHelp:"在两台设备上输入相同的房间 ID。",JoinCall:"📞 加入安全通话",ReadyConnect:"准备连接",Connection:"连接",Protected:"🟢 已保护",AudioMonitoring:"音频监控",AIDetection:"AI 检测",ScannerTitle:"📁 语音扫描器",ScannerDesc:"上传 WAV 录音（建议 4.04 秒以上）以进行真实的预训练 AASIST 分析。",AnalyzeRecording:"分析语音录音",SelectWav:"选择 WAV 音频文件（建议 4.04 秒以上）",AnalyzeButton:"🔍 分析语音",AnalysisResult:"🧠 分析结果",FraudTitle:"🛡️ 欺诈情报",FraudDesc:"查看之前的 EchoShield 安全事件。",Incidents:"安全事件",Historical:"系统检测到的历史风险事件。",Refresh:"↻ 刷新",Incident:"事件",RiskCol:"风险",Decision:"决定",Synthetic:"合成",AssistantTitle:"🤖 安全助手",AssistantDesc:"获取 EchoShield 安全指导。",Copilot:"EchoShield Security Copilot",CopilotDesc:"询问可疑通话、风险级别和交易安全。",AskAssistant:"询问助手",Placeholder:"询问安全问题...",WhyFake:"为什么这个声音是假的？",Patterns:"AASIST 检测到了什么模式？",Suspicious:"可疑通话注意事项",WhatAASIST:"什么是 AASIST？",WhatLive:"什么是 Live Voice？",HowUse:"如何使用应用？",Continue:"我应该继续吗？",Cloning:"检测到语音克隆？",ReportsTitle:"📊 安全报告",ReportsDesc:"EchoShield 保护活动概览。",Total:"事件总数",High:"高风险",Verification:"验证",Distribution:"风险分布",DistributionDesc:"已保存 AASIST 事件的实时计数。",ByRisk:"按风险级别统计事件",NoIncidents:"还没有分析事件。分析一个 WAV 语音即可填充此图表。",SettingsTitle:"⚙️ 设置",SettingsDesc:"配置 EchoShield 保护、屏幕和显示偏好。",RTP:"实时保护",RTPDesc:"监控活动语音会话。",VM:"语音监控",VMDesc:"分析语音真实性信号。",TN:"威胁通知",TNDesc:"为高风险通话显示安全警告。",TP:"交易保护",TPDesc:"敏感操作前要求验证。",Appearance:"🖥️ 屏幕外观",ScreenMode:"屏幕模式",ScreenModeDesc:"在浅色和深色仪表板之间切换。",Light:"☀️ 浅色",Dark:"🌙 深色",FontSize:"字体大小",FontSizeDesc:"更改仪表板文字大小。",Small:"小",Medium:"中",Large:"大",ExtraLarge:"特大",Language:"🌐 多语言支持",LanguageDesc:"随时更改应用语言。选择会保存，并用于文本、语音识别和语音回复。",Low:"低",MediumRisk:"中",HighRisk:"高",Allow:"允许",Verify:"验证",Block:"阻止",Hold:"暂停",HumanVoice:"人类 / 真实语音",SyntheticVoice:"AI / 合成语音",DecisionLabel:"决定",AnalyzedBy:"分析模型",LikelyAI:"可能是 AI / 合成语音",Review:"需要复核",LikelyHuman:"可能是人类 / 真实语音",AASISTReady:"AASIST 已就绪 • 预训练模型已加载 • 16 kHz 分析",AASISTFailed:"AASIST 不可用",AnalysisFailed:"AASIST 分析失败",RecordFirst:"请先录制语音。",WavOnly:"要进行真实 AASIST 分析，请上传 WAV 文件。",NeedAudio:"请提供至少 4.04 秒的音频。",SpeechListening:"正在聆听… 请现在说话。",SpeechStopped:"语音输入已停止。",SpeechUnavailable:"此浏览器不支持语音识别。您可以改为输入消息。",SpeechError:"无法理解语音输入。请重试或输入消息。",SpeechPermission:"语音输入需要麦克风权限。",TTSUnavailable:"此浏览器不支持文本转语音。文本功能仍可使用。",AssistantSpeaking:"正在朗读回复…",LanguageChanged:"语言已切换为"},
+"it-IT": {Security_Dashboard:"Dashboard di sicurezza",Live_Voice_Protection:"Protezione vocale in tempo reale",Secure_WebRTC_Calls:"Chiamate WebRTC sicure",Voice_Scanner:"Scanner vocale",Fraud_Intelligence:"Intelligence antifrode",Security_Assistant:"Assistente di sicurezza",Security_Reports:"Report di sicurezza",Settings:"Impostazioni",Home:"Home",Secure_Calls:"Chiamate sicure",SECURITY:"SICUREZZA",SYSTEM:"SISTEMA",Security_Notifications:"Notifiche di sicurezza",Clear:"Cancella",No_alerts:"Nessun nuovo avviso di sicurezza.",Protect:"Proteggi ogni conversazione",ProtectDesc:"Rileva l’impersonificazione vocale basata sull’IA prima che diventi una frode.",Ready:"PROTEZIONE PRONTA",Protection:"Protezione EchoShield",ProtectionDesc:"Analisi vocale in tempo reale, verifica del chiamante e intelligence sul rischio di frode in un unico livello di sicurezza.",StartLive:"🎙️ Avvia protezione in tempo reale",Quick:"Azioni rapide",MonitorMic:"Monitora l’audio del microfono in tempo reale.",SecureCall:"Chiamata sicura",StartWebRTC:"Avvia una chiamata WebRTC protetta.",UploadAnalyze:"Carica e analizza una registrazione vocale.",Overview:"Panoramica sicurezza",ProtectionStatus:"Stato protezione",AIMonitoring:"Monitoraggio IA",Active:"Attivo",Online:"Online",LiveTitle:"🎙️ Protezione vocale in tempo reale",LiveDesc:"Registra almeno 4,04 secondi, poi esegui la vera analisi anti-spoofing AASIST preaddestrata.",LiveCard:"Monitoraggio vocale in tempo reale",LiveCardDesc:"Parla naturalmente e interrompi la registrazione quando hai finito.",StartRecording:"🎙️ Avvia registrazione",AnalyzeVoice:"🧠 Analizza voce",MicReady:"Microfono pronto",VoiceResult:"Risultato sicurezza vocale",Risk:"RISCHIO",AnalysisComplete:"Analisi completata",SecurityAction:"AZIONE DI SICUREZZA",AASISTNote:"⚠️ Segnale del classificatore AASIST. Questa percentuale è un punteggio del modello, non una probabilità calibrata.",CallsTitle:"📞 Chiamate WebRTC sicure",CallsDesc:"Comunicazione in tempo reale controllata con protezione EchoShield.",StartProtected:"Avvia chiamata protetta",RoomHelp:"Inserisci lo stesso ID stanza su entrambi i dispositivi.",JoinCall:"📞 Partecipa alla chiamata sicura",ReadyConnect:"Pronto a connettersi",Connection:"Connessione",Protected:"🟢 Protetta",AudioMonitoring:"Monitoraggio audio",AIDetection:"Rilevamento IA",ScannerTitle:"📁 Scanner vocale",ScannerDesc:"Carica una registrazione WAV (consigliati 4,04+ secondi) per la vera analisi AASIST preaddestrata.",AnalyzeRecording:"Analizza registrazione vocale",SelectWav:"Seleziona un file WAV (consigliati 4,04+ secondi)",AnalyzeButton:"🔍 Analizza voce",AnalysisResult:"🧠 Risultato analisi",FraudTitle:"🛡️ Intelligence antifrode",FraudDesc:"Esamina i precedenti incidenti di sicurezza EchoShield.",Incidents:"Incidenti di sicurezza",Historical:"Eventi di rischio storici rilevati dal sistema.",Refresh:"↻ Aggiorna",Incident:"Incidente",RiskCol:"Rischio",Decision:"Decisione",Synthetic:"Sintetica",AssistantTitle:"🤖 Assistente di sicurezza",AssistantDesc:"Ottieni indicazioni di sicurezza da EchoShield.",Copilot:"EchoShield Security Copilot",CopilotDesc:"Chiedi informazioni su chiamate sospette, livelli di rischio e sicurezza delle transazioni.",AskAssistant:"Chiedi all’assistente",Placeholder:"Fai una domanda di sicurezza...",WhyFake:"Perché questa voce era falsa?",Patterns:"Quali pattern ha rilevato AASIST?",Suspicious:"Precauzioni per chiamate sospette",WhatAASIST:"Cos’è AASIST?",WhatLive:"Cos’è Live Voice?",HowUse:"Come uso l’app?",Continue:"Devo continuare?",Cloning:"Clonazione vocale rilevata?",ReportsTitle:"📊 Report di sicurezza",ReportsDesc:"Panoramica dell’attività di protezione EchoShield.",Total:"Incidenti totali",High:"Rischio alto",Verification:"Verifica",Distribution:"Distribuzione del rischio",DistributionDesc:"Conteggi in tempo reale degli incidenti AASIST salvati.",ByRisk:"Incidenti per livello di rischio",NoIncidents:"Nessun incidente analizzato. Analizza una voce WAV per popolare questo grafico.",SettingsTitle:"⚙️ Impostazioni",SettingsDesc:"Configura protezione EchoShield, schermo e preferenze di visualizzazione.",RTP:"Protezione in tempo reale",RTPDesc:"Monitora le sessioni vocali attive.",VM:"Monitoraggio vocale",VMDesc:"Analizza i segnali di autenticità della voce.",TN:"Notifiche minacce",TNDesc:"Mostra avvisi di sicurezza per chiamate rischiose.",TP:"Protezione transazioni",TPDesc:"Richiedi verifica prima delle azioni sensibili.",Appearance:"🖥️ Aspetto schermo",ScreenMode:"Modalità schermo",ScreenModeDesc:"Passa tra dashboard chiara e scura.",Light:"☀️ Chiaro",Dark:"🌙 Scuro",FontSize:"Dimensione carattere",FontSizeDesc:"Modifica la dimensione del testo del dashboard.",Small:"Piccolo",Medium:"Medio",Large:"Grande",ExtraLarge:"Molto grande",Language:"🌐 Supporto multilingue",LanguageDesc:"Cambia la lingua dell’app in qualsiasi momento. La scelta viene salvata e usata per testo, riconoscimento vocale e risposte vocali.",Low:"BASSO",MediumRisk:"MEDIO",HighRisk:"ALTO",Allow:"CONSENTI",Verify:"VERIFICA",Block:"BLOCCA",Hold:"PAUSA",HumanVoice:"Voce umana / autentica",SyntheticVoice:"Voce IA / sintetica",DecisionLabel:"Decisione",AnalyzedBy:"Analizzato da",LikelyAI:"VOCE PROBABILMENTE IA / SINTETICA",Review:"VERIFICA RICHIESTA",LikelyHuman:"VOCE PROBABILMENTE UMANA / AUTENTICA",AASISTReady:"AASIST pronto • modello preaddestrato caricato • analisi 16 kHz",AASISTFailed:"AASIST non disponibile",AnalysisFailed:"Analisi AASIST non riuscita",RecordFirst:"Registra prima la tua voce.",WavOnly:"Per l’analisi AASIST reale, carica un file WAV.",NeedAudio:"Fornisci almeno 4,04 secondi di audio.",SpeechListening:"Ascolto… parla ora.",SpeechStopped:"Input vocale interrotto.",SpeechUnavailable:"Il riconoscimento vocale non è disponibile in questo browser. Puoi digitare il messaggio.",SpeechError:"Impossibile comprendere l’input vocale. Riprova o digita il messaggio.",SpeechPermission:"È necessaria l’autorizzazione del microfono per l’input vocale.",TTSUnavailable:"La sintesi vocale non è disponibile in questo browser. Il testo resta disponibile.",AssistantSpeaking:"Lettura della risposta ad alta voce…",LanguageChanged:"Lingua cambiata in"}
+};
+
+function echoLangCode(){ return localStorage.getItem("echoshield_language") || "en-US"; }
+function echoT(key){ const lang=ECHO_I18N[echoLangCode()]||ECHO_I18N["en-US"]; return lang[key] || ECHO_I18N["en-US"][key] || key; }
+function echoLanguageName(){ return (ECHO_LANGUAGES[echoLangCode()]||ECHO_LANGUAGES["en-US"]).native; }
+
+const ECHO_TEXT_MAP = {
+"Security Dashboard":"Security_Dashboard","Live Voice Protection":"Live_Voice_Protection","Secure WebRTC Calls":"Secure_WebRTC_Calls","Voice Scanner":"Voice_Scanner","Fraud Intelligence":"Fraud_Intelligence","Security Assistant":"Security_Assistant","Security Reports":"Security_Reports","Settings":"Settings","Home":"Home","Secure Calls":"Secure_Calls","SECURITY":"SECURITY","SYSTEM":"SYSTEM","Security Notifications":"Security_Notifications","Clear":"Clear","No new security alerts.":"No_alerts","Protect Every Conversation":"Protect","Detect AI-powered voice impersonation before it becomes fraud.":"ProtectDesc","PROTECTION READY":"Ready","EchoShield Protection":"Protection","Real-time voice analysis, caller verification and fraud-risk intelligence in one security layer.":"ProtectionDesc","🎙️ Start Live Protection":"StartLive","Quick Actions":"Quick","Monitor microphone audio in real time.":"MonitorMic","Secure Call":"SecureCall","Start a protected WebRTC call.":"StartWebRTC","Upload and analyze a voice recording.":"UploadAnalyze","Security Overview":"Overview","Protection Status":"ProtectionStatus","AI Monitoring":"AIMonitoring","Active":"Active","Online":"Online","Real-Time Voice Monitoring":"LiveCard","Speak naturally and stop the recording when you are finished.":"LiveCardDesc","🎙️ Start Recording":"StartRecording","🧠 Analyze Voice":"AnalyzeVoice","Microphone ready":"MicReady","Voice Security Result":"VoiceResult","RISK":"Risk","Analysis complete":"AnalysisComplete","SECURITY ACTION":"SecurityAction","📞 Secure WebRTC Calls":"CallsTitle","Controlled real-time communication with EchoShield protection.":"CallsDesc","Start Protected Call":"StartProtected","Enter the same room ID on both devices.":"RoomHelp","📞 Join Secure Call":"JoinCall","Ready to connect":"ReadyConnect","Connection":"Connection","🟢 Protected":"Protected","Audio Monitoring":"AudioMonitoring","AI Detection":"AIDetection","📁 Voice Scanner":"ScannerTitle","Analyze Voice Recording":"AnalyzeRecording","🔍 Analyze Voice":"AnalyzeButton","🧠 Analysis Result":"AnalysisResult","🛡️ Fraud Intelligence":"FraudTitle","Review previous EchoShield security incidents.":"FraudDesc","Security Incidents":"Incidents","Historical risk events detected by the system.":"Historical","↻ Refresh":"Refresh","Incident":"Incident","Risk":"RiskCol","Decision":"Decision","Synthetic":"Synthetic","🤖 Security Assistant":"AssistantTitle","Get security guidance from EchoShield.":"AssistantDesc","Ask about suspicious calls, risk levels and transaction safety.":"CopilotDesc","Ask Assistant":"AskAssistant","EchoShield Security Copilot":"Copilot","Why was this voice fake?":"WhyFake","What patterns did AASIST detect?":"Patterns","Suspicious call precautions":"Suspicious","What is AASIST?":"WhatAASIST","What is Live Voice?":"WhatLive","How do I use the app?":"HowUse","Should I continue?":"Continue","Voice cloning detected?":"Cloning","📊 Security Reports":"ReportsTitle","Overview of EchoShield protection activity.":"ReportsDesc","Total Incidents":"Total","High Risk":"High","Verification":"Verification","Risk Distribution":"Distribution","Live counts from saved AASIST incidents.":"DistributionDesc","Incidents by risk level":"ByRisk","No analyzed incidents yet. Analyze a WAV voice to populate this graph.":"NoIncidents","⚙️ Settings":"SettingsTitle","Configure EchoShield protection, screen and display preferences.":"SettingsDesc","Real-Time Protection":"RTP","Monitor active voice sessions.":"RTPDesc","Voice Monitoring":"VM","Analyze voice authenticity signals.":"VMDesc","Threat Notifications":"TN","Show security warnings for risky calls.":"TNDesc","Transaction Protection":"TP","Require verification before sensitive actions.":"TPDesc","🖥️ Screen Appearance":"Appearance","Screen Mode":"ScreenMode","Switch between Light and Dark dashboard.":"ScreenModeDesc","☀️ Light":"Light","🌙 Dark":"Dark","Font Size":"FontSize","Change dashboard text size.":"FontSizeDesc","Small":"Small","Medium":"Medium","Large":"Large","Extra Large":"ExtraLarge"};
+
+function echoCaptureOriginalText(){
+    document.querySelectorAll("body *").forEach(el=>{
+        if(el.children.length===0 && el.textContent.trim() && !el.closest("script,style")){
+            if(!el.dataset.echoOriginal) el.dataset.echoOriginal=el.textContent;
+        }
+    });
+}
+
+function echoTranslateStaticText(){
+    const lang=ECHO_I18N[echoLangCode()]||ECHO_I18N["en-US"];
+    document.querySelectorAll("[data-echo-original]").forEach(el=>{
+        const original=el.dataset.echoOriginal.trim();
+        const key=ECHO_TEXT_MAP[original];
+        if(key && lang[key]) el.textContent=lang[key];
+    });
+    document.querySelectorAll("body *").forEach(el=>{
+        if(el.children.length!==0 || el.closest("script,style")) return;
+        const original=el.dataset.echoOriginal ? el.dataset.echoOriginal.trim() : el.textContent.trim();
+        if(!el.dataset.echoOriginal) el.dataset.echoOriginal=original;
+        const key=ECHO_TEXT_MAP[original];
+        if(key && lang[key]) el.textContent=lang[key];
+    });
+    const q=document.getElementById("question");
+    if(q){ q.placeholder=echoT("Placeholder"); }
+    const fl=document.getElementById("fontLanguageSelect");
+    if(fl) fl.value=echoLangCode();
+    document.documentElement.lang=echoLangCode();
+    document.body.style.fontFamily = echoLangCode()==="hi-IN" ? '"Noto Sans Devanagari","Nirmala UI","Mangal","Segoe UI",sans-serif' : echoLangCode()==="zh-CN" ? '"Noto Sans SC","Microsoft YaHei","PingFang SC",sans-serif' : 'Inter,"Segoe UI",Arial,sans-serif';
+    const top=document.getElementById("topTitle");
+    if(top){ const page=[...document.querySelectorAll(".page")].find(x=>x.classList.contains("active")); const map={home:"Security_Dashboard",live:"Live_Voice_Protection",calls:"Secure_WebRTC_Calls",scanner:"Voice_Scanner",fraud:"Fraud_Intelligence",assistant:"Security_Assistant",reports:"Security_Reports",settings:"Settings"}; if(page&&map[page.id]) top.textContent=echoT(map[page.id]); }
+    echoUpdateLanguageBadge();
+}
+
+function echoUpdateLanguageBadge(){
+    const topbar=document.querySelector(".top-actions"); if(!topbar) return;
+    let badge=document.getElementById("echoLanguageBadge");
+    if(!badge){
+        badge=document.createElement("button");
+        badge.id="echoLanguageBadge";
+        badge.className="echo-language-badge";
+        badge.type="button";
+        badge.onclick=openLanguageMenu;
+        badge.setAttribute("aria-label","Language Selector");
+        topbar.prepend(badge);
+    }
+    badge.textContent="🌐 "+echoLanguageName();
+}
+
+function setEchoLanguage(code){
+    if(!ECHO_LANGUAGES[code]) code="en-US";
+    localStorage.setItem("echoshield_language",code);
+    localStorage.setItem("echoshield_speech_language",code);
+    echoTranslateStaticText();
+    const quick=document.getElementById("echoQuickLanguage"); if(quick) quick.value=code;
+    const profile=document.getElementById("echoProfileLanguage"); if(profile) profile.value=code;
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+    const status=document.getElementById("speechStatus");
+    if(status) status.textContent=echoT("LanguageChanged")+" "+echoLanguageName()+".";
+    const q=document.getElementById("question");
+    if(q && !q.dataset.userEdited){
+        const defaults={"en-US":"What should I do if the call is suspicious?","hi-IN":"अगर कॉल संदिग्ध हो तो मुझे क्या करना चाहिए?","es-ES":"¿Qué debo hacer si la llamada es sospechosa?","fr-FR":"Que dois-je faire si l’appel est suspect ?","zh-CN":"如果通话可疑，我应该怎么办？","it-IT":"Cosa devo fare se la chiamata è sospetta?"};
+        q.value=defaults[code];
+    }
+}
+
+let echoRecognition=null;
+let echoListening=false;
+function toggleSpeechRecognition(){
+    const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SpeechRecognition){
+        const st=document.getElementById("speechStatus"); if(st) st.textContent=echoT("SpeechUnavailable"); return;
+    }
+    if(echoListening && echoRecognition){ echoRecognition.stop(); return; }
+    echoRecognition=new SpeechRecognition();
+    echoRecognition.lang=echoLangCode(); echoRecognition.continuous=false; echoRecognition.interimResults=true; echoRecognition.maxAlternatives=1;
+    echoListening=true;
+    const btn=document.getElementById("speechBtn"); if(btn) btn.textContent="⏹️";
+    const st=document.getElementById("speechStatus"); if(st) st.textContent=echoT("SpeechListening");
+    echoRecognition.onresult=e=>{
+        let text=""; for(let i=e.resultIndex;i<e.results.length;i++) text+=e.results[i][0].transcript;
+        const q=document.getElementById("question"); if(q){ q.value=text.trim(); q.dataset.userEdited="true"; }
+    };
+    echoRecognition.onerror=e=>{
+        const st=document.getElementById("speechStatus"); if(st) st.textContent=e.error==="not-allowed"?echoT("SpeechPermission"):echoT("SpeechError");
+    };
+    echoRecognition.onend=()=>{ echoListening=false; const btn=document.getElementById("speechBtn"); if(btn) btn.textContent="🎤"; const st=document.getElementById("speechStatus"); if(st) st.textContent=echoT("SpeechStopped"); };
+    try{ echoRecognition.start(); }catch(e){ echoListening=false; const st=document.getElementById("speechStatus"); if(st) st.textContent=echoT("SpeechError"); }
+}
+
+function speakText(text){
+    if(!text) return;
+    if(!window.speechSynthesis || !window.SpeechSynthesisUtterance){ alert(echoT("TTSUnavailable")); return; }
+    window.speechSynthesis.cancel();
+    const utter=new SpeechSynthesisUtterance(String(text).replace(/<[^>]*>/g," ").replace(/\\s+/g," ").trim());
+    utter.lang=echoLangCode(); utter.rate=0.95; utter.pitch=1;
+    const voices=window.speechSynthesis.getVoices();
+    const prefix=echoLangCode().split("-")[0].toLowerCase();
+    const voice=voices.find(v=>(v.lang||"").toLowerCase().startsWith(prefix));
+    if(voice) utter.voice=voice;
+    window.speechSynthesis.speak(utter);
+}
+
+function speakLastResponse(){
+    const answer=document.getElementById("answer");
+    if(!answer || !answer.textContent.trim()){ const st=document.getElementById("speechStatus"); if(st) st.textContent=echoT("SpeechError"); return; }
+    speakText(answer.textContent);
+    const st=document.getElementById("speechStatus"); if(st) st.textContent=echoT("AssistantSpeaking");
+}
+
+function echoAddSpeakButton(container,text){
+    if(!container || !text) return;
+    let b=container.querySelector(".assistant-speak-btn");
+    if(!b){ b=document.createElement("button"); b.className="assistant-speak-btn"; b.type="button"; b.title="🔊"; b.textContent="🔊"; container.appendChild(b); }
+    b.onclick=()=>speakText(text);
+}
+
+function syntheticLabelFallback(synthetic,human,decision){ return echoT("SyntheticVoice")+": "+synthetic+"%. "+echoT("HumanVoice")+": "+human+"%. "+echoT("DecisionLabel")+": "+decision; }
+
+function echoLocalizeResult(){
+    const mapRisk={LOW:echoT("Low"),MEDIUM:echoT("MediumRisk"),HIGH:echoT("HighRisk")};
+    const mapDecision={ALLOW:echoT("Allow"),VERIFY:echoT("Verify"),BLOCK:echoT("Block"),HOLD:echoT("Hold")};
+    const humanLabel=echoT("HumanVoice"); const syntheticLabel=echoT("SyntheticVoice");
+    const syntheticText=document.getElementById("scanSynthetic"); if(syntheticText && window.lastVoiceAnalysis){ const a=window.lastVoiceAnalysis.analysis||window.lastVoiceAnalysis; syntheticText.textContent=syntheticLabel+": "+Number(a.synthetic_score??0)+"%"; }
+    const humanText=document.getElementById("scanHuman"); if(humanText && window.lastVoiceAnalysis){ const a=window.lastVoiceAnalysis.analysis||window.lastVoiceAnalysis; humanText.textContent=humanLabel+": "+Number(a.human_score??0)+"%"; }
+    const scanDecision=document.getElementById("scanDecision"); if(scanDecision && window.lastVoiceAnalysis){ const r=window.lastVoiceAnalysis.risk||window.lastVoiceAnalysis; const d=String(r.decision||window.lastVoiceAnalysis.decision||"VERIFY").toUpperCase(); scanDecision.textContent=echoT("DecisionLabel")+": "+(mapDecision[d]||d); }
+    const liveDecision=document.getElementById("liveDecision"); if(liveDecision && window.lastVoiceAnalysis){ const r=window.lastVoiceAnalysis.risk||window.lastVoiceAnalysis; const d=String(r.decision||window.lastVoiceAnalysis.decision||"VERIFY").toUpperCase(); liveDecision.textContent=echoT("DecisionLabel")+": "+(mapDecision[d]||d); }
+    ["scanStatus","liveStatusResult"].forEach(id=>{ const el=document.getElementById(id); if(!el||!window.lastVoiceAnalysis)return; const a=window.lastVoiceAnalysis.analysis||window.lastVoiceAnalysis; const syn=Number(a.synthetic_score??0); el.textContent=syn>=75?echoT("LikelyAI"):syn>=45?echoT("Review"):echoT("LikelyHuman"); });
+    ["scanAction","liveAction"].forEach(id=>{ const el=document.getElementById(id); if(!el||!window.lastVoiceAnalysis)return; const r=window.lastVoiceAnalysis.risk||window.lastVoiceAnalysis; const d=String(r.decision||window.lastVoiceAnalysis.decision||"VERIFY").toUpperCase(); const labels={BLOCK:"🛑 "+mapDecision.BLOCK,HOLD:"⏸️ "+mapDecision.HOLD,VERIFY:"🔐 "+mapDecision.VERIFY,ALLOW:"✅ "+mapDecision.ALLOW}; el.textContent=labels[d]||d; });
+    ["scanMode"].forEach(id=>{ const el=document.getElementById(id); if(el&&window.lastVoiceAnalysis){ const a=window.lastVoiceAnalysis.analysis||window.lastVoiceAnalysis; el.textContent=echoT("AnalyzedBy")+": "+(a.analyzed_by||"Pretrained AASIST Model"); }});
+}
+
+function echoPatchAssistant(){
+    const q=document.getElementById("question"); if(q && !q.dataset.echoBound){ q.dataset.echoBound="true"; q.addEventListener("input",()=>q.dataset.userEdited="true"); }
+    if(window.lastVoiceAnalysis) echoLocalizeResult();
+    const ans=document.getElementById("answer"); if(ans && ans.textContent.trim()) echoAddSpeakButton(ans,ans.textContent);
+}
+
+// Real multilingual selector initialization. This MUST run only after ECHO_LANGUAGES/ECHO_I18N are initialized.
+function initMultilingualLanguageSystem(){
+    try{
+        echoCaptureOriginalText();
+        const select=document.getElementById("fontLanguageSelect");
+        const saved=localStorage.getItem("echoshield_language")||"en-US";
+        const code=ECHO_LANGUAGES[saved] ? saved : "en-US";
+        if(select){
+            select.value=code;
+            select.onchange=function(e){ setEchoLanguage(e.target.value); };
+        }
+        setEchoLanguage(code);
+        echoPatchAssistant();
+        if(window.speechSynthesis) window.speechSynthesis.onvoiceschanged=function(){};
+    }catch(error){
+        console.error("EchoShield multilingual initialization failed:",error);
+    }
+}
+
+// Observe dynamic AASIST/assistant content without interfering with existing logic.
+const echoObserver=new MutationObserver(()=>{
+    clearTimeout(window.__echoTranslateTimer);
+    window.__echoTranslateTimer=setTimeout(()=>{
+        try{ echoPatchAssistant(); echoTranslateStaticText(); }catch(error){ console.debug("Language refresh:",error); }
+    },80);
+});
+echoObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
+
+// IMPORTANT: initialize multilingual support after all language dictionaries/functions exist.
+if(document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMultilingualLanguageSystem, {once:true});
+} else {
+    initMultilingualLanguageSystem();
+}
+
+
+</script>
+
+</body>
+</html>
